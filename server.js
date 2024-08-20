@@ -56,18 +56,19 @@ app.listen(3000, () => {
 });
 
 
-// const adminRoutes = require('./routes/admin');
-// app.use('/admin', adminRoutes);
+const adminRoutes = require('./routes/admin');
+app.use('/admin', adminRoutes);
 
-// const teacherRoutes = require('./routes/teacher');
-// app.use('/teacher', teacherRoutes);
+const teacherRoutes = require('./routes/teacher');
+app.use('/teacher', teacherRoutes);
 
-// const studentRoutes = require('./routes/student');
-// app.use('/student',studentRoutes);
+const studentRoutes = require('./routes/student');
+app.use('/student',studentRoutes);
 
-// const authRoutes = require('./routes/auth');
+const authRoutes = require('./routes/auth');
+app.use('/', authRoutes);
 
 
-
-app.listen(8080);
-console.log('8080 is the magic port');
+app.listen(8080, () => {
+  console.log('Server is running on port 3000');
+});

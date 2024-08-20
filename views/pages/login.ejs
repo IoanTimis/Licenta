@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head'); %>
+</head>
+<body class="container">
+
+<header>
+    <%- include('../partials/header'); %>
+</header>
+
+  <br><br><br><br>
+  <form action="/login" method="POST">
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="text" class="form-control" name="email" placeholder="introdu email">
+    </div>
+    <div class="form-group">
+      <label for="password">Parola</label>
+      <input type="password" class="form-control" name="password" placeholder="introdu parola">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+
+<footer>
+    <%- include('../partials/footer'); %>
+</footer>
+
+</body>
+</html>
