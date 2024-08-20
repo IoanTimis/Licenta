@@ -32,7 +32,6 @@ app.use(session({ secret: process.env.SESSION_SECRET,
 //   next();
 // });
 
-const dbService = require('./config/database-config.js');
 
 const bcrypt = require('bcryptjs');
 
@@ -57,14 +56,16 @@ app.listen(3000, () => {
 });
 
 
-const adminRoutes = require('./routes/admin');
-app.use('/admin', adminRoutes);
+// const adminRoutes = require('./routes/admin');
+// app.use('/admin', adminRoutes);
 
-const teacherRoutes = require('./routes/teacher');
-app.use('/teacher', teacherRoutes);
+// const teacherRoutes = require('./routes/teacher');
+// app.use('/teacher', teacherRoutes);
 
-const studentRoutes = require('./routes/student');
-app.use('/student',studentRoutes);
+// const studentRoutes = require('./routes/student');
+// app.use('/student',studentRoutes);
+
+// const authRoutes = require('./routes/auth');
 
 
 
