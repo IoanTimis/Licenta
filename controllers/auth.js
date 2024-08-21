@@ -6,6 +6,10 @@ const home = (req, res) => {
   res.render('pages/index');
 };
 
+const about = (req, res) => {
+  res.render('pages/about');
+};
+
 const register = (req, res) => {
   res.render('pages/register');
 };
@@ -19,7 +23,7 @@ const registerPost = async (req, res) => {
     sanitizeHtml(name);
     sanitizeHtml(email);
     
-    const userInstance = await user.create({
+    const userInstance = await User.create({
       first_name: first_name,
       name: name,
       email: email, 
@@ -76,12 +80,19 @@ const loginPost = async (req, res, next) => {
     }
   }
 };
+
+const logout = (req, res) => {
+  delete req.session.loggedInUser;
+  res.redirect('/');
+};
   
 
 module.exports = {
   home,
+  about,
   register,
   registerPost,
   login,
-  loginPost
+  loginPost,
+  logout
 };
