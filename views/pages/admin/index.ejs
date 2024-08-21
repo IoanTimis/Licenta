@@ -7,7 +7,15 @@
         <%- include('../../partials/adminHeader') %>
     </header>
 
-    <h1>Bine ai venit adminule!</h1>
+    <main>
+        <ul id="ulUsers">
+            <% topics.forEach(function(topic) { %>
+              <li class="liUsers">
+                <div>Titlu</div>
+              </li>
+            <% }); %>
+          </ul>
+    </main>
     
 
     <footer>

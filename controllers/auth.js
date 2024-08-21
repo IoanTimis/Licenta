@@ -10,11 +10,11 @@ const about = (req, res) => {
   res.render('pages/about');
 };
 
-const register = (req, res) => {
-  res.render('pages/register');
+const registerStudent = (req, res) => {
+  res.render('pages/registerStudent');
 };
 
-const registerPost = async (req, res) => {
+const registerStudentPost = async (req, res) => {
   try {
     var {first_name, name, email, password, type } = req.body;
 
@@ -27,6 +27,37 @@ const registerPost = async (req, res) => {
       first_name: first_name,
       name: name,
       email: email, 
+      password: hashedPassword,
+      type: type
+    });
+    res.render('pages/register-success', { user: userInstance });
+  } catch (error) {
+    console.error('Error registering user:', error);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
+const registerTeacher = (req, res) => {
+  res.render('pages/registerTeacher');
+};
+
+const registerTeacherPost = async (req, res) => {
+  try {
+    var {first_name, name, email, title, faculty_id, specialization_id, password, type } = req.body;
+
+    const hashedPassword = await bcrypt.hash(password, 8);
+    sanitizeHtml(first_name);
+    sanitizeHtml(name);
+    sanitizeHtml(email);
+    sanitizeHtml(title);
+    
+    const userInstance = await User.create({
+      first_name: first_name,
+      name: name,
+      email: email,
+      title: title,
+      faculty_id: faculty_id,
+      specialization_id: specialization_id, 
       password: hashedPassword,
       type: type
     });
@@ -90,8 +121,8 @@ const logout = (req, res) => {
 module.exports = {
   home,
   about,
-  register,
-  registerPost,
+  registerStudent,
+  registerStudentPost,
   login,
   loginPost,
   logout
