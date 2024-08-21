@@ -44,11 +44,17 @@ app.use(cookieParser());
 const sequelize = require('./config/database');
 const user = require('./models/user');
 const topic = require('./models/topic');
+const specialization = require('./models/specialization');
+const specializationTopics = require('./models/specializationTopics');
 
-sequelize.sync({ force: false }) 
+sequelize.sync({ force: false, logging: console.log })
   .then(() => {
     console.log('Database & tables created!');
-});
+  })
+  .catch(error => {
+    console.error('Error creating database:', error);
+  });
+
 
 
 app.listen(3000, () => {
@@ -67,6 +73,9 @@ app.use('/student',studentRoutes);
 
 const authRoutes = require('./routes/auth');
 app.use('/', authRoutes);
+
+const generalRoutes = require('./routes/general');
+app.use('/', generalRoutes);
 
 
 app.listen(8080, () => {

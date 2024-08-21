@@ -6,7 +6,7 @@ const Topic = sequelize.define('topic', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
-    autoIncrement
+    autoIncrement: true,
   },
   title: {
     type: DataTypes.STRING,

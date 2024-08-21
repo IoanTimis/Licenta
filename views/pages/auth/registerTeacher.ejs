@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <%- include('../partials/head'); %>
+    <%- include('../../partials/head'); %>
 </head>
 <body class="container">
 
 <header>
-    <%- include('../partials/authHeader'); %>
+    <%- include('../../partials/generalHeader'); %>
 </header>
 
   <br><br><br><br>
@@ -24,31 +24,19 @@
       <input type="text" class="form-control" id="email" name="email" placeholder="Enter email">
     </div>
     <div class="form-group">
+      <label for="title">title</label>
+      <input type="text" class="form-control" id="title" name="title" placeholder="Enter title">
+    </div>
+    <div class="form-group">
       <label for="password">Password</label>
       <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password">
-    </div>
-
-    <div class="form-group">
-      <label for="type">Alege facultatea</label><br>
-      <input type="radio" id="student" name="type" value="student">
-      <label for="student">bla</label><br>
-      <input type="radio" id="teacher" name="type" value="teacher">
-      <label for="teacher">bla2</label><br>
-    </div>
-
-    <div class="form-group">
-      <label for="type">Alege specializarea</label><br>
-      <input type="radio" id="student" name="type" value="student">
-      <label for="student">bla</label><br>
-      <input type="radio" id="teacher" name="type" value="teacher">
-      <label for="teacher">bla2</label><br>
     </div>
 
     <button type="submit" class="btn btn-primary">Submit</button>
   </form>
 
 <footer>
-    <%- include('../partials/footer'); %>
+    <%- include('../../partials/footer'); %>
 </footer>
 
 </body>

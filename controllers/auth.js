@@ -2,16 +2,8 @@ const sanitizeHtml = require('sanitize-html');
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 
-const home = (req, res) => {
-  res.render('pages/index');
-};
-
-const about = (req, res) => {
-  res.render('pages/about');
-};
-
 const registerStudent = (req, res) => {
-  res.render('pages/registerStudent');
+  res.render('pages/auth/registerStudent');
 };
 
 const registerStudentPost = async (req, res) => {
@@ -30,7 +22,7 @@ const registerStudentPost = async (req, res) => {
       password: hashedPassword,
       type: type
     });
-    res.render('pages/register-success', { user: userInstance });
+    res.render('pages/auth/register-success', { user: userInstance });
   } catch (error) {
     console.error('Error registering user:', error);
     res.status(500).send('Internal Server Error');
@@ -38,7 +30,7 @@ const registerStudentPost = async (req, res) => {
 };
 
 const registerTeacher = (req, res) => {
-  res.render('pages/registerTeacher');
+  res.render('pages/auth/registerTeacher');
 };
 
 const registerTeacherPost = async (req, res) => {
@@ -61,7 +53,7 @@ const registerTeacherPost = async (req, res) => {
       password: hashedPassword,
       type: type
     });
-    res.render('pages/register-success', { user: userInstance });
+    res.render('pages/auth/register-success', { user: userInstance });
   } catch (error) {
     console.error('Error registering user:', error);
     res.status(500).send('Internal Server Error');
@@ -72,7 +64,7 @@ const login = (req, res, next) => {
   if (req.session.loggedInUser) {
     return res.redirect('/');
   }else{
-    res.render('pages/login');
+    res.render('pages/auth/login');
   }
 };
 
@@ -82,11 +74,11 @@ const loginPost = async (req, res, next) => {
     try {
       const user = await User.findOne({ where: { email } });
       if (!user) {
-        return res.render('pages/login', { error: 'Invalid email' });
+        return res.render('pages/auth/login', { error: 'Invalid email' });
       }
       const isPasswordValid = await bcrypt.compare(password, user.password);
       if (!isPasswordValid) {
-        return res.render('pages/login', { error: 'Invalid password' });
+        return res.render('pages/auth/login', { error: 'Invalid password' });
       }
 
       req.session.loggedInUser = {
@@ -119,8 +111,8 @@ const logout = (req, res) => {
   
 
 module.exports = {
-  home,
-  about,
+  registerTeacher,
+  registerTeacherPost,
   registerStudent,
   registerStudentPost,
   login,
