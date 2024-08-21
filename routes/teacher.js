@@ -9,6 +9,7 @@ router.use([isTeacher]);
 const teacherController = require('../controllers/teacher'); 
 
 router.get('/', teacherController.home);
+router.get('/teacher/about', teacherController.about);
 
 
 module.exports = router;

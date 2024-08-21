@@ -9,6 +9,7 @@ router.use([isStudent]);
 const studentController = require('../controllers/student'); 
 
 router.get('/', studentController.home);
+router.get('/about', studentController.about);
 
 
 module.exports = router;
