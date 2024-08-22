@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 const Faculty = require('./faculty');
 
-const Specialization = sequelize.define('specialization', {
+const Specialization = sequelize.define('specializations', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,

@@ -53,7 +53,7 @@ const registerTeacherPost = async (req, res) => {
       password: hashedPassword,
       type: type
     });
-    res.render('pages/auth/register-success', { user: userInstance });
+    res.render('pages/auth/registerSuccess', { user: userInstance });
   } catch (error) {
     console.error('Error registering user:', error);
     res.status(500).send('Internal Server Error');

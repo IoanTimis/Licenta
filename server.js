@@ -42,12 +42,13 @@ app.use(cookieParser());
 
 //models------------------------------------------------------------------------------------------------------
 const sequelize = require('./config/database');
+const faculty = require('./models/faculty');
 const user = require('./models/user');
 const topic = require('./models/topic');
 const specialization = require('./models/specialization');
-const specializationTopics = require('./models/specializationTopics');
+const specializationTopic = require('./models/specializationTopic');
 
-sequelize.sync({ force: false, logging: console.log })
+sequelize.sync({ force: true, logging: console.log })
   .then(() => {
     console.log('Database & tables created!');
   })

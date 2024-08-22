@@ -3,7 +3,7 @@ const sequelize = require('../config/database');
 const Faculty = require('./faculty');
 const Specialization = require('./specialization');
 
-const User = sequelize.define('user', {
+const User = sequelize.define('users', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
