@@ -1,14 +1,38 @@
 const sanitizeHtml = require('sanitize-html');
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
+const Faculty = require('../models/faculty');
+const Specialization = require('../models/specialization');
+const { query } = require('express');
 
-const registerStudent = (req, res) => {
-  res.render('pages/auth/registerStudent');
+const getSpecializations = async (req, res) => {
+  const faculty_id = req.params.facultyId;
+  
+  try {
+      const specializations = await Specialization.findAll({ where: { faculty_id: faculty_id } });
+      res.json(specializations);
+  } catch (error) {
+      console.error('Error fetching specializations:', error);
+      res.status(500).send('Internal Server Error');
+  }
+
+};
+
+
+const registerStudent = async (req, res) => {
+  try {
+    const faculties = await Faculty.findAll();
+    return res.render('pages/auth/registerStudent', { faculties: faculties });
+  }
+  catch (error) {
+    console.error('Error registering user:', error);
+    res.status(500).send('Internal Server Error');
+  };
 };
 
 const registerStudentPost = async (req, res) => {
   try {
-    var {first_name, name, email, password, type } = req.body;
+    const {first_name, name, email, password, faculty_id, specialization_id, education_level } = req.body;
 
     const hashedPassword = await bcrypt.hash(password, 8);
     sanitizeHtml(first_name);
@@ -20,9 +44,11 @@ const registerStudentPost = async (req, res) => {
       name: name,
       email: email, 
       password: hashedPassword,
-      type: type
+      faculty_id: faculty_id,
+      specialization_id: specialization_id,
+      education_level: education_level,
     });
-    res.render('pages/auth/register-success', { user: userInstance });
+    res.render('pages/auth/registerSuccess', { user: userInstance });
   } catch (error) {
     console.error('Error registering user:', error);
     res.status(500).send('Internal Server Error');
@@ -111,6 +137,7 @@ const logout = (req, res) => {
   
 
 module.exports = {
+  getSpecializations,
   registerTeacher,
   registerTeacherPost,
   registerStudent,

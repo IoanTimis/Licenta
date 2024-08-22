@@ -2,7 +2,9 @@ const express = require('express');
 
 const router  = express.Router(); 
 
-const authController = require('../controllers/auth'); 
+const authController = require('../controllers/auth');
+
+router.get('/getSpecializations/:facultyId', authController.getSpecializations);
 
 router.get('/register/student', authController.registerStudent);
 router.post('/register/student', authController.registerStudentPost);
