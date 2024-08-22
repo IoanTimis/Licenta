@@ -3,7 +3,7 @@ const sequelize = require('../config/database');
 const Specialization = require('./specialization');
 const Topic = require('./topic');
 
-const SpecializationTopics = sequelize.define('specialization_topic', {
+const SpecializationTopic = sequelize.define('specializations_topics', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -35,13 +35,13 @@ const SpecializationTopics = sequelize.define('specialization_topic', {
     },
 });
 
-SpecializationTopics.belongsTo(Specialization, {foreignKey: 'specialization_id', onDelete: 'CASCADE'});
-SpecializationTopics.belongsTo(Topic, {foreignKey: 'topic_id', onDelete: 'CASCADE'});
+SpecializationTopic.belongsTo(Specialization, {foreignKey: 'specialization_id', onDelete: 'CASCADE'});
+SpecializationTopic.belongsTo(Topic, {foreignKey: 'topic_id', onDelete: 'CASCADE'});
 
-Specialization.belongsToMany(Topic, {through: SpecializationTopics, foreignKey: 'specialization_id'});
-Topic.belongsToMany(Specialization, {through: SpecializationTopics, foreignKey: 'topic_id'});
+Specialization.belongsToMany(Topic, {through: SpecializationTopic, foreignKey: 'specialization_id'});
+Topic.belongsToMany(Specialization, {through: SpecializationTopic, foreignKey: 'topic_id'});
 
-Topic.hasMany(SpecializationTopics, {foreignKey: 'topic_id', onDelete: 'CASCADE'});
-Specialization.hasMany(SpecializationTopics, {foreignKey: 'specialization_id', onDelete: 'CASCADE'});
+Topic.hasMany(SpecializationTopic, {foreignKey: 'topic_id', onDelete: 'CASCADE'});
+Specialization.hasMany(SpecializationTopic, {foreignKey: 'specialization_id', onDelete: 'CASCADE'});
 
-module.exports = SpecializationTopics;
+module.exports = SpecializationTopic;
