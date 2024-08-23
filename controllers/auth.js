@@ -61,7 +61,7 @@ const registerTeacher = (req, res) => {
 
 const registerTeacherPost = async (req, res) => {
   try {
-    var {first_name, name, email, title, faculty_id, specialization_id, password, type } = req.body;
+    const {first_name, name, email, password, title} = req.body;
 
     const hashedPassword = await bcrypt.hash(password, 8);
     sanitizeHtml(first_name);
@@ -74,10 +74,8 @@ const registerTeacherPost = async (req, res) => {
       name: name,
       email: email,
       title: title,
-      faculty_id: faculty_id,
-      specialization_id: specialization_id, 
       password: hashedPassword,
-      type: type
+      type: 'teacher'
     });
     res.render('pages/auth/registerSuccess', { user: userInstance });
   } catch (error) {
@@ -112,6 +110,9 @@ const loginPost = async (req, res, next) => {
         first_name: user.first_name,
         name: user.name,
         email: user.email,
+        title: user.title,
+        education_level: user.education_level,
+        faculty_id: user.faculty_id,
         type: user.type
       };
 
