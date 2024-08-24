@@ -9,31 +9,31 @@
     <%- include('../../partials/generalHeader'); %>
 </header>
 
-  <br><br><br><br>
-  <form action="/register/teacher" method="POST">
-    <div class="form-group">
-      <div class="form-group">
-        <label for="first_name">First name</label>
+<br><br><br><br>
+<form action="/register/teacher" method="POST">
+    <div class="mb-3">
+        <label for="first_name" class="form-label">First name</label>
         <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Enter first name">
-      </div>
-      <label for="name">Name</label>
-      <input type="text" class="form-control" id="name" name="name" placeholder="Enter name">
     </div>
-    <div class="form-group">
-      <label for="email">Email</label>
-      <input type="text" class="form-control" id="email" name="email" placeholder="Enter email">
+    <div class="mb-3">
+        <label for="name" class="form-label">Name</label>
+        <input type="text" class="form-control" id="name" name="name" placeholder="Enter name">
     </div>
-    <div class="form-group">
-      <label for="title">title</label>
-      <input type="text" class="form-control" id="title" name="title" placeholder="Enter title">
+    <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="text" class="form-control" id="email" name="email" placeholder="Enter email">
     </div>
-    <div class="form-group">
-      <label for="password">Password</label>
-      <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password">
+    <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input type="text" class="form-control" id="title" name="title" placeholder="Enter title">
+    </div>
+    <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password">
     </div>
 
     <button type="submit" class="btn btn-primary">Submit</button>
-  </form>
+</form>
 
 <footer>
     <%- include('../../partials/footer'); %>

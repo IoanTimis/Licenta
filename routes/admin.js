@@ -9,7 +9,7 @@ router.use([isAdmin]);
 const adminController = require('../controllers/admin'); 
 
 router.get('/', adminController.home);
-router.get('/admin/about', adminController.about);
+router.get('/about', adminController.about);
 
 
 module.exports = router;

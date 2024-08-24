@@ -6,6 +6,9 @@ const about = (req, res) => {
   res.render('pages/student/about');
 };
 
+const topics = (req, res) => {
+  res.render('pages/student/topics');
+};
 
 
 
@@ -14,5 +17,6 @@ const about = (req, res) => {
 
 module.exports = {
   home,
-  about
+  about,
+  topics
 };

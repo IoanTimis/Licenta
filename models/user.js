@@ -25,7 +25,6 @@ const User = sequelize.define('users', {
   title: {
     type: DataTypes.STRING,
     allowNull: true,
-    defaultValue: 'student',
   },
   password: {
     type: DataTypes.STRING,
@@ -33,8 +32,7 @@ const User = sequelize.define('users', {
   },
   education_level: {
     type: DataTypes.ENUM('bsc', 'msc'),
-    allowNull: false,
-    defaultValue: 'bsc',
+    allowNull: true,
   },
   type: {
     type: DataTypes.ENUM('student', 'teacher', 'admin'),

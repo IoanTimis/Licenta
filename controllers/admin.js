@@ -5,7 +5,7 @@ const home = (req, res) => {
 };
 
 const about = (req, res) => {
-  res.render('pages/admin/about', {topics: []});
+  res.render('pages/admin/about');
 };
 
 
