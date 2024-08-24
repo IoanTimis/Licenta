@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../../partials/head') %>
+</head>
+<body class="container">
+    <header>
+        <%- include('../../partials/studentHeader') %>
+    </header>
+    <main>
+        <h1>Detalii despre: <%= topic.title %></h1>
+        <p>Descriere: <%= topic.description %></p>
+        <p>Locuri disponibile: <%= topic.slots %></p>
+        <p>Tip: <%= topic.type %></p>
+        <p>Profesor: <%= topic.user.name %></p>
+        <p>Email profesor: <%= topic.user.email %></p>
+    </main>
+    <footer>
+        <%- include('../../partials/footer') %>
+    </footer>
+</body>
+</html>

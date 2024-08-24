@@ -10,7 +10,8 @@ const studentController = require('../controllers/student');
 
 router.get('/', studentController.home);
 router.get('/about', studentController.about);
-router.get('/topics', studentController.topics);
+router.get('/topics', studentController.getStudentTopics);
+router.get('/topic/:id', studentController.topicPage);
 
 
 module.exports = router;

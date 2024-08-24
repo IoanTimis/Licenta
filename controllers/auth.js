@@ -111,6 +111,7 @@ const loginPost = async (req, res, next) => {
         name: user.name,
         email: user.email,
         title: user.title,
+        specialization_id: user.specialization_id,
         education_level: user.education_level,
         faculty_id: user.faculty_id,
         type: user.type

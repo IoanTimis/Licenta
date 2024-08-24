@@ -7,17 +7,26 @@
         <%- include('../../partials/studentHeader') %>
     </header>
     <main>
+      <% topics.forEach(function(topic) { %>
         <div class="row row-cols-1 row-cols-md-2 g-4">
             <div class="col">
-              <div class="card">
-                <img src="" class="card-img-top" alt="">
-                <div class="card-body">
-                  <h5 class="card-title">Card title</h5>
-                  <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                </div>
-              </div>
+                <!-- Înveliți cardul într-un tag <a> -->
+                <a href="/student/topic/<%= topic.id %>" class="text-decoration-none text-dark">
+                    <div class="card">
+                        <img src="" class="card-img-top" alt="">
+                        <div class="card-body">
+                            <h5 class="card-title">Titlu: <%= topic.title %></h5>
+                            <p class="card-text">Descriere: <%= topic.description %></p>
+                            <p class="card-text">Locuri: <%= topic.slots %></p>
+                            <p class="card-text">Tip: <%= topic.type %></p>
+                            <p class="card-text">Profesor: <%= topic.user.name %></p>
+                        </div>
+                    </div>
+                </a>
             </div>
         </div>
+    <% }); %>
+    
     </main>
     
     <footer>
