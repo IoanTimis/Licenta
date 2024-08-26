@@ -5,7 +5,7 @@
 </head>
 <body class="container">
     <header>
-        <%- include('../../partials/studentHeader') %>
+        <%- include('../../partials/teacherHeader') %>
     </header>
     <main>
         <h1>Detalii despre: <%= topic.title %></h1>
@@ -14,6 +14,7 @@
         <p>Tip: <%= topic.type %></p>
         <p>Profesor: <%= topic.user.name %></p>
         <p>Email profesor: <%= topic.user.email %></p>
+        <button id=<%=topic.id%>></button>
     </main>
     <footer class="footer bg-light text-center text-lg-start">
         <%- include('../../partials/footer') %>
