@@ -1,5 +1,6 @@
 const User = require('../models/user');
 const Topic = require('../models/topic');
+const { truncateText } = require('../helpers/utils');
 
 const home = (req, res) => {
   res.render('pages/teacher/index');
@@ -24,7 +25,7 @@ const teacherTopics = async (req, res) => {
       return res.status(404).json({ message: 'Teacher not found' });
     }
 
-    res.render('pages/teacher/topics', { user: teacher });
+    res.render('pages/teacher/topics', { user: teacher, truncateText: truncateText });
   }
   catch (error) {
     console.error('Error getting topics:', error);

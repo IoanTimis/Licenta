@@ -1,0 +1,27 @@
+.editBtn{
+    background-color: black;
+    color: white;
+    margin-right: 10px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+.editBtn:hover {
+    opacity: 0.8;
+    background-color: blue;
+}
+
+.deleteBtn{
+    background-color: black;
+    color: white;
+    margin-left: 10px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+.deleteBtn:hover {
+    opacity: 0.8;
+    background-color: red;
+}

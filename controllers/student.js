@@ -2,6 +2,7 @@ const Topic = require('../models/topic');
 const Specialization = require('../models/specialization');
 const SpecializationTopic = require('../models/specializationTopic');
 const User = require('../models/user');
+const { truncateText } = require('../helpers/utils');
 
 const home = (req, res) => {
   res.render('pages/student/index');
@@ -27,7 +28,7 @@ const getStudentTopics = async (req, res) => {
     }]
     });
 
-   return res.render('pages/student/topics', { topics: topics });
+   return res.render('pages/student/topics', { topics: topics, truncateText: truncateText });
 
   }
   catch (error) {
