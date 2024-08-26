@@ -16,3 +16,12 @@ main {
   padding: 1rem;
   text-align: center;
 }
+
+.newTopic {
+  border: 1px solid #ccc;
+  padding: 1rem;
+}
+
+.topicsContainer {
+  border: 1px solid #ccc;
+}
