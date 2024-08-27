@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 const User = require('./user'); 
+const Specialization = require('./specialization');
 
 const Topic = sequelize.define('topics', {
   id: {
@@ -20,7 +21,7 @@ const Topic = sequelize.define('topics', {
     type: DataTypes.TEXT,
     allowNull: false,
   },
-  type: {
+  education_level: {
     type: DataTypes.ENUM('bsc', 'msc'),
     allowNull: false,
   },

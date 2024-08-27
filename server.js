@@ -25,7 +25,7 @@ app.use(session({ secret: process.env.SESSION_SECRET,
 
 app.use((req, res, next) => {
   if (req.session.loggedInUser) {
-    res.locals.user = req.session.loggedInUser.type;
+    res.locals.user = req.session.loggedInUser.specialization;
   } else {
     res.locals.user = null;
   }

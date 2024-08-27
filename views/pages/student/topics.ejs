@@ -17,8 +17,9 @@
                             <div class="card-body">
                                 <h5 class="card-title">Titlu: <%= topic.title %></h5>
                                 <p>Descriere: <%= truncateText(topic.description, 40) %></p>
+                                <p class="card-text">Cuvinte cheie: <%= topic.keywords %></p>
                                 <p class="card-text">Locuri: <%= topic.slots %></p>
-                                <p class="card-text">Tip: <%= topic.type %></p>
+                                <p class="card-text">Tip: <%= topic.education_level %></p>
                                 <p class="card-text">Profesor: <%= topic.user.name %></p>
                             </div>
                         </div>

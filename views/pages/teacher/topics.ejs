@@ -5,11 +5,12 @@
 <body class="container">
     <header>
         <%- include('../../partials/teacherHeader') %>
+        <script src="/js/topics.js"></script>
     </header>
     <main class="flex-grow-1">
-        <div class="container topicsContainer">
+        <div class="container topicsContainer" id="topicsContainer">
             <div class="newTopic">
-                <button type="button" class="btn btn-primary addBtn" data-bs-toggle="modal" data-bs-target="#addModal">
+                <button type="button" class="btn btn-primary addBtn" data-bs-toggle="modal" data-bs-target="#topicModal">
                     Adăugare temă de licență
                 </button>
             </div>
@@ -22,16 +23,19 @@
                                 <img src="" class="card-img-top" alt="">
                                 <div class="card-body">
                                     <h5 class="card-title">Titlu: <%= topic.title %></h5>
-                                    <p>Descriere: <%= truncateText(topic.description, 40) %></p>
-                                    <p class="card-text">Locuri: <%= topic.slots %></p>
-                                    <p class="card-text">Tip: <%= topic.type %></p>
+                                    <p class="card-text description">Descriere: <%= truncateText(topic.description, 40) %></p>
+                                    <p class="card-text keywords">Cuvinte cheie: <%= topic.keywords %></p>
+                                    <p class="card-text slots">Locuri: <%= topic.slots %></p>
+                                    <p class="card-text education_level">Tip: <%= topic.education_level %></p>
+                                    <p><%= topic.id%></p>
                                 </div>
                             </a>
                             <div class="card-footer d-flex justify-content-between">
-                                <button type="button" class="btn editBtn" data-bs-toggle="modal" data-bs-target="#editModal" data-id="<%= user.topics.id %>">
+                                <button type="button" class="btn editBtn" data-bs-toggle="modal" data-bs-target="#topicModal" 
+                                data-id="<%= topic.id %>"">
                                     Editează
                                 </button>
-                                <button type="button" class="btn deleteBtn" data-id="<%= user.topics.id %>">Șterge</button>
+                                <button type="button" class="btn deleteBtn" data-id="<%= topic.id %>">Șterge</button>
                             </div>
                         </div>
                     </div>
@@ -40,72 +44,37 @@
         </div>
     </main>
     
-    <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal fade" id="topicModal" tabindex="-1" aria-labelledby="topicModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="addModalLabel">Adaugă temă de licență</h1>
+                    <h1 class="modal-title fs-5" id="topicModalLabel"></h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="/teacher/topic/add" method="POST" id="addForm">
+                    <form action="" method="" id="topicForm">
                         <div class="mb-3">
                             <label for="title" class="form-label">Titlu</label>
-                            <input type="text" class="form-control" id="title" name="title" required>
+                            <input type="text" class="form-control"  name="title" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="keywords" class="form-label">Cuvinte cheie</label>
+                            <input type="text" class="form-control"  name="keywords" required>
                         </div>
                         <div class="mb-3">
                             <label for="description" class="form-label">Descriere</label>
-                            <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                            <textarea class="form-control"  name="description" rows="3" required></textarea>
                         </div>
                         <div class="mb-3">
-                            <label for="type" class="form-label">Tip</label>
-                            <select class="form-select" id="type" name="type" required>
+                            <label for="type" class="form-label">Nivel educatie</label>
+                            <select class="form-select"  name="education_level" required>
                                 <option value="bsc">Licență</option>
                                 <option value="msc">Masterat</option>
                             </select>
                         </div>
                         <div class="mb-3">
                             <label for="slots" class="form-label">Număr de locuri</label>
-                            <input type="number" class="form-control" id="slots" name="slots" required>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Închide</button>
-                            <button type="submit" class="btn btn-primary">Adaugă tema</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="editModalLabel">Adaugă temă de licență</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="/teacher/topic/add" method="Put" id="editForm">
-                        <input type="hidden" name="id">
-                        <div class="mb-3">
-                            <label for="title" class="form-label">Titlu</label>
-                            <input type="text" class="form-control" id="title" name="title" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="description" class="form-label">Descriere</label>
-                            <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="type" class="form-label">Tip</label>
-                            <select class="form-select" id="type" name="type" required>
-                                <option value="bsc">Licență</option>
-                                <option value="msc">Masterat</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="slots" class="form-label">Număr de locuri</label>
-                            <input type="number" class="form-control" id="slots" name="slots" required>
+                            <input type="number" class="form-control"  name="slots" required>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Închide</button>
