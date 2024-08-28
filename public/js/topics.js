@@ -6,7 +6,7 @@ function truncateText(text, maxLength) {
 }
 
 $(document).ready(function() {
-
+//Add-edit topic------------------------------------------------------------------------------------------------------
   $("#topicForm").on('submit', function(e) {
     e.preventDefault();
     var form = $(this);
@@ -69,6 +69,34 @@ $(document).ready(function() {
     });
   });
 
+//Populating/clear the modal data------------------------------------------------------------------------------------------------------
+  function openModal(action, data = {}) {
+    let form = document.getElementById('topicForm');
+    if (action === 'edit') {
+        form.setAttribute('action', `/teacher/topic/edit/${data.id}`);
+        form.setAttribute('method', 'PUT');
+        document.getElementById('topicModalLabel').textContent = 'Editează temă de licență';
+
+        form.querySelector('input[name="title"]').value = data.title;
+        form.querySelector('input[name="keywords"]').value = data.keywords;
+        form.querySelector('textarea[name="description"]').value = data.description;
+        form.querySelector('select[name="education_level"]').value = data.education_level;
+        form.querySelector('input[name="slots"]').value = data.slots;
+    } else if (action === 'add') {
+        form.setAttribute('action', '/teacher/topic/add');
+        form.setAttribute('method', 'POST');
+        document.getElementById('topicModalLabel').textContent = 'Adaugă temă de licență';
+
+        form.querySelector('input[name="title"]').value = '';
+        form.querySelector('input[name="keywords"]').value = '';
+        form.querySelector('textarea[name="description"]').value = '';
+        form.querySelector('input[name="slots"]').value = '';
+        form.querySelector('select[name="education_level"]').value = 'bsc';
+    }
+    $('#myModal').modal('show');
+  }
+
+//add listeners------------------------------------------------------------------------------------------------------
   document.querySelector('.addBtn').addEventListener('click', function() {
     openModal('add');
   });
@@ -90,29 +118,27 @@ $(document).ready(function() {
   });
 
 
-  function openModal(action, data = {}) {
-    let form = document.getElementById('topicForm');
-    if (action === 'edit') {
-        form.setAttribute('action', `/teacher/topic/edit/${data.id}`);
-        form.setAttribute('method', 'PUT');
-        document.getElementById('topicModalLabel').textContent = 'Editează temă de licență';
+//formselectgroups------------------------------------------------------------------------------------------------------
+$("#inputGroupSelect01").on('change', function(e) {
+  e.preventDefault();
+  var selected = $(this).val();
+  $.ajax({
+      url: `/getSpecializations/${selected}`,
+      method: 'GET',
+      success: function(response) {
+          $("#inputGroupSelect02").empty();
+          
+          response.forEach(function(specialization) {
+              $("#inputGroupSelect02").append(
+                  `<option value="${specialization.id}">${specialization.name}</option>`
+              );
+          });
+      },
+      error: function(error) {
+          console.error('Error fetching specializations:', error);
+      }
+  });
 
-        form.querySelector('input[name="title"]').value = data.title;
-        form.querySelector('input[name="keywords"]').value = data.keywords;
-        form.querySelector('textarea[name="description"]').value = data.description;
-        form.querySelector('select[name="education_level"]').value = data.education_level;
-        form.querySelector('input[name="slots"]').value = data.slots;
-    } else if (action === 'add') {
-        form.setAttribute('action', '/teacher/topic/add');
-        form.setAttribute('method', 'POST');
-        document.getElementById('topicModalLabel').textContent = 'Adaugă temă de licență';
-
-        form.querySelector('input[name="title"]').value = '';
-        form.querySelector('input[name="keywords"]').value = '';
-        form.querySelector('textarea[name="description"]').value = '';
-        form.querySelector('select[name="education_level"]').value = 'bsc';
-    }
-    $('#myModal').modal('show');
-  }
+});
 
 });

@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const Topic = require('../models/topic');
 const { truncateText } = require('../helpers/utils');
+const Faculty = require('../models/faculty');
 
 const home = (req, res) => {
   res.render('pages/teacher/index');
@@ -14,6 +15,12 @@ const teacherTopics = async (req, res) => {
   try{
     const teacherId = req.session.loggedInUser.id;
 
+    const faculties = await Faculty.findAll();
+
+    if (!faculties) {
+      return res.status(404).send('Faculties not found');
+    }
+
     const teacher = await User.findByPk(teacherId, {
       include: {
         model: Topic,
@@ -22,10 +29,10 @@ const teacherTopics = async (req, res) => {
     });
   
     if (!teacher) {
-      return res.status(404).json({ message: 'Teacher not found' });
+      return res.status(404).send('Teacher not found' );
     }
 
-    res.render('pages/teacher/topics', { user: teacher, truncateText: truncateText });
+    res.render('pages/teacher/topics', { user: teacher, faculties: faculties, truncateText: truncateText });
   }
   catch (error) {
     console.error('Error getting topics:', error);
@@ -81,6 +88,18 @@ const apiTeacherTopic = async (req, res) => {
   }
 };
 
+const getSpecializations = async (req, res) => {
+  const faculty_id = req.params.facultyId;
+  
+  try {
+      const specializations = await Specialization.findAll({ where: { faculty_id: faculty_id } });
+      res.json(specializations);
+  } catch (error) {
+      console.error('Error fetching specializations:', error);
+      res.status(500).send('Internal Server Error');
+  }
+
+};
 
 const addTopic = async (req, res) => {
   try{
@@ -144,6 +163,7 @@ module.exports = {
   teacherTopics,
   teacherTopic,
   apiTeacherTopic,
+  getSpecializations,
   addTopic,
   editTopic
 };

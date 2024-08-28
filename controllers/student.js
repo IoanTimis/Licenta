@@ -15,18 +15,26 @@ const about = (req, res) => {
 const getStudentTopics = async (req, res) => {
   try {
     const specialization_id = req.session.loggedInUser.specialization_id;
+    const education_level = req.session.loggedInUser.education_level;
 
     const specialization = await Specialization.findByPk(specialization_id);
     if (!specialization) {
       return res.status(404).json({ message: 'Specialization not found' });
       }
-
+      //Posibil sa fie nevoie de modificari pt a nu afisa ce topicurile de masterat sau licenta in functie de nivelul de studii
     const topics = await specialization.getTopics({
+      where: {
+        education_level: education_level
+      },
       include: [{
         model: User,  
         as: 'user'   
-    }]
+      }]
     });
+
+    if (!topics) {
+      return res.status(404).json({ message: 'Topics not found' });
+    };
 
    return res.render('pages/student/topics', { topics: topics, truncateText: truncateText });
 
