@@ -154,7 +154,7 @@ $(document).ready(function() {
     openModal('add');
   });
 
-  $('#topicsRow').on('click', 'editBtn', function() {
+  $('#topicsRow').on('click', '.editBtn', function() {
     const topicId = $(this).data('id');
     $.ajax({
         url: `/teacher/api/topic/${topicId}`, 
@@ -168,34 +168,6 @@ $(document).ready(function() {
         }
     });
   });
-
-
-// Todo: while event listener------------------------------------------------------------------------------------------------------
-$("#topicsRow").on('click', '.editBtn', function() {
-  const modal = $('#topicModal');
-  const topicId = $(this).data('id');
-  const card = $(this).closest('.col');
-
-  modal.find('.modal-title').text('Editează temă de licență');
-  modal.find('.modal-footer').find('.btn-primary').text('Editează temă');
-  modal.find('.modal-footer').find('.btn-primary').attr('id', topicId);
-
-  modal.find('.modal-body').find('select[name="faculty_id"]').closest('div').addClass('hidden');
-  modal.find('.modal-body').find('select[name="specialization_id"]').closest('div').addClass('hidden');
-
-  let data = {
-    id: topicId,
-    title: card.find('h5').text().split(': ')[1],
-    description: card.find('.description').text().split(': ')[1],
-    keywords: card.find('.keywords').text().split(': ')[1],
-    slots: card.find('.slots').text().split(': ')[1],
-    education_level: card.find('.education_level').text().split(': ')[1],
-  };
- 
-  openModal('edit',data);
-
-});
-
 
 //formselectgroups------------------------------------------------------------------------------------------------------
   $("#inputGroupSelect01").on('change', function(e) {
