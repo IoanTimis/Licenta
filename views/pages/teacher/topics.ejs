@@ -5,7 +5,6 @@
 <body class="container">
     <header>
         <%- include('../../partials/teacherHeader') %>
-        <link rel="stylesheet" href="/css/iconsSpecialContent.css">
         <script src="/js/topics.js"></script>
     </header>
     <main class="flex-grow-1">
@@ -16,11 +15,11 @@
                 </button>
             </div>
 
-            <% user.topics.forEach(function(topic) { %>
-                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4" id="topicsRow">
+                <% user.topics.forEach(function(topic) { %>
                     <div class="col">
                         <a href="/teacher/topic/<%= topic.id %>" class="text-decoration-none text-dark">
-                            <div class="card">
+                            <div class="card" data-id="<%= topic.id %>">
                                 <img src="" class="card-img-top" alt="">
                                 <div class="card-body">
                                     <h5 class="card-title">Titlu: <%= topic.title %></h5>
@@ -28,29 +27,28 @@
                                     <p class="card-text keywords">Cuvinte cheie: <%= topic.keywords %></p>
                                     <p class="card-text slots">Locuri: <%= topic.slots %></p>
                                     <p class="card-text education_level">Tip: <%= topic.education_level %></p>
-                                    <p><%= topic.id%></p>
+                                    <p><%= topic.id %></p>
                                 </div>
-                            </a>
-                            <div class="card-footer d-flex justify-content-between">
-                                <div class="dropdown">
-                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                      Dropdown link
-                                    </a>
-                                  
-                                    <ul class="dropdown-menu">
-                                        <button type="button" class="btn dropdown-item editBtn" data-bs-toggle="modal" data-bs-target="#topicModal" 
-                                        data-id="<%= topic.id %>"">Editează
-                                        </button> 
-                                        <button type="button" class="btn dropdown-item cloneBtn" data-id="<%= topic.id %>">Clonare</button>
-                                        <button type="button" class="btn dropdown-item deleteBtn" data-id="<%= topic.id %>">Sterge</button>
-                                    </ul>
-                                  </div>
+                            </div>
+                        </a>
+                        <div class="card-footer d-flex justify-content-between">
+                            <div class="dropdown">
+                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Actiuni
+                                </a>
+                                <ul class="dropdown-menu" id="topicActions">
+                                    <button type="button" class="btn dropdown-item editBtn" data-bs-toggle="modal" data-bs-target="#topicModal" data-id="<%= topic.id %>">
+                                        Editează
+                                    </button> 
+                                    <button type="button" class="btn dropdown-item cloneBtn" data-id="<%= topic.id %>">Clonare</button>
+                                    <button type="button" class="btn dropdown-item deleteBtn" data-id="<%= topic.id %>">Sterge</button>
+                                </ul>
                             </div>
                         </div>
                     </div>
-                </div>
-            <% }); %>
-        </div>
+                <% }); %>
+            </div>
+        </div> 
     </main>
     
     <div class="modal fade" id="topicModal" tabindex="-1" aria-labelledby="topicModalLabel" aria-hidden="true">
@@ -78,31 +76,30 @@
                             <label for="slots" class="form-label">Număr de locuri</label>
                             <input type="number" class="form-control"  name="slots" required>
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-3 hidden">
                             <label for="education_level" class="form-label">Nivel educatie</label>
                             <select class="form-select"  name="education_level" required>
                                 <option value="bsc">Licență</option>
                                 <option value="msc">Masterat</option>
                             </select>
                         </div>
-                        <div class="mb-3">
-                            <label for="inputGroupSelect01" class="form-label">Optiuni</label>
+                        <div class="mb-3 hidden">
+                            <label for="inputGroupSelect01" class="form-label">Alege facultatea</label>
                             <select class="form-select" id="inputGroupSelect01" name="faculty_id">
-                                <option selected>Alege facultatea</option>
+                                <option value=""></option>
                                 <% faculties.forEach(function(faculty) { %>          
                                     <option value="<%= faculty.id %>"><%= faculty.name %></option>
                                 <% }); %>
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="inputGroupSelect02" class="form-label">Optiuni</label>
+                            <label for="inputGroupSelect02" class="form-label">Alege specializarea</label>
                             <select class="form-select" id="inputGroupSelect02" name="specialization_id">
-                                <option selected>Alege specializarea</option>
                             </select>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Închide</button>
-                            <button type="submit" class="btn btn-primary">Adaugă tema</button>
+                            <button type="submit" class="btn btn-primary"></button>
                         </div>
                     </form>
                 </div>

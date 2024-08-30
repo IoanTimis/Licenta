@@ -22,35 +22,51 @@ $(document).ready(function() {
         specialization: form.find('select[name="specialization"]').val(),
         keywords: form.find('input[name="keywords"]').val(),
         slots: form.find('input[name="slots"]').val(),
+        education_level: form.find('select[name="education_level"]').val(),
+        faculty_id: form.find('select[name="faculty_id"]').val(),
+        specialization_id: form.find('select[name="specialization_id"]').val()
       },
       success: function(response) {
         if(action === 'POST') {
-          html = `<div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
-                      <div class="col">
-                          <a href="/teacher/topic/${response.topic.id}" class="text-decoration-none text-dark">
-                              <div class="card">
-                                  <img src="" class="card-img-top" alt="">
-                                  <div class="card-body">
-                                      <h5 class="card-title">Titlu: ${response.topic.title}</h5>
-                                      <p class="card-text description">Descriere: ${truncateText(response.topic.description, 40)}</p>
-                                      <p class="card-text keywords">Cuvinte cheie: ${response.topic.keywords}</p>
-                                      <p class="card-text slots">Locuri: ${response.topic.slots}</p>
-                                      <p class="card-text" education_level>Tip: ${response.topic.education_level}</p>
-                                  </div>
-                              </a>
-                              <div class="card-footer d-flex justify-content-between">
-                                  <button type="button" class="btn editBtn" data-bs-toggle="modal" data-bs-target="#editModal" data-id="<%= user.topics.id %>">
-                                      Editează
-                                  </button>
-                                  <button type="button" class="btn deleteBtn" data-id="<%= user.topics.id %>">Șterge</button>
+          html = `<div class="col">
+                      <a href="/teacher/topic/${response.topic.id}" class="text-decoration-none text-dark">
+                          <div class="card" data-id="${response.topic.id}">
+                              <img src="" class="card-img-top" alt="">
+                              <div class="card-body">
+                                  <h5 class="card-title">Titlu: ${response.topic.title}</h5>
+                                  <p class="card-text description">Descriere: ${truncateText(response.topic.description, 40)}</p>
+                                  <p class="card-text keywords">Cuvinte cheie: ${response.topic.keywords}</p>
+                                  <p class="card-text slots">Locuri: ${response.topic.slots}</p>
+                                  <p class="card-text education_level">Tip: ${response.topic.education_level}</p>
+                                  <p>${response.topic.id}</p>
                               </div>
                           </div>
+                      </a>
+                      <div class="card-footer d-flex justify-content-between">
+                          <div class="dropdown">
+                              <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                  Actiuni
+                              </a>
+                              <ul class="dropdown-menu" id="topicActions">
+                                  <button type="button" class="btn dropdown-item editBtn" data-bs-toggle="modal" data-bs-target="#topicModal" data-id="${response.topic.id}">
+                                      Editează
+                                  </button>
+                                  <button type="button" class="btn dropdown-item cloneBtn" data-id="${response.topic.id}">Clonare</button>
+                                  <button type="button" class="btn dropdown-item deleteBtn" data-id="${response.topic.id}">Sterge</button>
+                              </ul>
+                          </div>
                       </div>
-                  </div>
-          `;
-          $('#topicsContainer').append(html);
+                  </div>`;
+          $('#topicsRow').append(html);
+          $('.dropdown-toggle').dropdown();
+
+          form.find('input[name="title"]').val('');
+          form.find('input[name="keywords"]').val('');
+          form.find('textarea[name="description"]').val('');
+          form.find('input[name="slots"]').val('');
+          form.find('select[name="education_level"]').val('bsc');
           console.log('Topic added successfully:', response);
-          ajax.alert('Topic added successfully');
+          alert('Topic added successfully');
         } else {
           const card = document.querySelector(`.card[data-id="${response.topic.id}"]`);
           card.querySelector('.card-title').textContent = `Titlu: ${response.topic.title}`;
@@ -59,7 +75,7 @@ $(document).ready(function() {
           card.querySelector('.slots').textContent = `Locuri: ${response.topic.slots}`;
           card.querySelector('.education_level').textContent = `Tip: ${response.topic.education_level}`;
           console.log('Topic edited successfully:', response);
-          ajax.alert('Topic edited successfully');
+          alert('Topic edited successfully');
         }
         
       },
@@ -69,76 +85,139 @@ $(document).ready(function() {
     });
   });
 
-//Populating/clear the modal data------------------------------------------------------------------------------------------------------
-  function openModal(action, data = {}) {
-    let form = document.getElementById('topicForm');
-    if (action === 'edit') {
-        form.setAttribute('action', `/teacher/topic/edit/${data.id}`);
-        form.setAttribute('method', 'PUT');
-        document.getElementById('topicModalLabel').textContent = 'Editează temă de licență';
-
-        form.querySelector('input[name="title"]').value = data.title;
-        form.querySelector('input[name="keywords"]').value = data.keywords;
-        form.querySelector('textarea[name="description"]').value = data.description;
-        form.querySelector('select[name="education_level"]').value = data.education_level;
-        form.querySelector('input[name="slots"]').value = data.slots;
-    } else if (action === 'add') {
-        form.setAttribute('action', '/teacher/topic/add');
-        form.setAttribute('method', 'POST');
-        document.getElementById('topicModalLabel').textContent = 'Adaugă temă de licență';
-
-        form.querySelector('input[name="title"]').value = '';
-        form.querySelector('input[name="keywords"]').value = '';
-        form.querySelector('textarea[name="description"]').value = '';
-        form.querySelector('input[name="slots"]').value = '';
-        form.querySelector('select[name="education_level"]').value = 'bsc';
-    }
-    $('#myModal').modal('show');
-  }
-
-//add listeners------------------------------------------------------------------------------------------------------
-  document.querySelector('.addBtn').addEventListener('click', function() {
-    openModal('add');
-  });
-
-  document.querySelectorAll('.editBtn').forEach(button => {
-    button.addEventListener('click', function() {
-        const topicId = this.getAttribute('data-id');
-        $.ajax({
-            url: `/teacher/api/topic/${topicId}`, 
-            type: 'GET',
-            success: function(data) {
-                openModal('edit', data);
-            },
-            error: function(error) {
-                console.log('Eroare la preluarea datelor:', error);
-            }
-        });
+//Delete topic------------------------------------------------------------------------------------------------------
+  $("#topicsRow").on('click', '.deleteBtn', function() {
+    var topicId = $(this).data('id');
+    var card = $(this).closest('.col');
+    console.log('Topic id:', topicId);
+    $.ajax({
+        url: `/teacher/topic/delete/${topicId}`,
+        method: 'DELETE',
+        success: function(response) {
+            card.remove();
+            console.log('Topic deleted successfully:', response);
+            alert('Topic deleted successfully');
+        },
+        error: function(xhr, status, error) {
+            console.error('Error deleting topic:', error);
+        }
     });
   });
 
 
-//formselectgroups------------------------------------------------------------------------------------------------------
-$("#inputGroupSelect01").on('change', function(e) {
-  e.preventDefault();
-  var selected = $(this).val();
-  $.ajax({
-      url: `/getSpecializations/${selected}`,
-      method: 'GET',
-      success: function(response) {
-          $("#inputGroupSelect02").empty();
-          
-          response.forEach(function(specialization) {
-              $("#inputGroupSelect02").append(
-                  `<option value="${specialization.id}">${specialization.name}</option>`
-              );
-          });
-      },
-      error: function(error) {
-          console.error('Error fetching specializations:', error);
-      }
+
+//Populating/clear the modal data------------------------------------------------------------------------------------------------------
+  function openModal(action, data = {}) {
+    let modal = $('#topicModal');
+    let form = $('#topicForm');
+    let facultyDiv = form.find('select[name="faculty_id"]').closest('div');
+    let specializationDiv = form.find('select[name="specialization_id"]').closest('div');
+
+    if (action === 'edit') {
+        form.attr('action', `/teacher/topic/edit/${data.id}`);
+        form.attr('method', 'PUT');
+        $('#topicModalLabel').text('Editează temă de licență');
+        modal.find('.modal-footer').find('.btn-primary').text('Editeaza tema');
+
+        form.find('input[name="title"]').val(data.title);
+        form.find('input[name="keywords"]').val(data.keywords);
+        form.find('textarea[name="description"]').val(data.description);
+        form.find('select[name="education_level"]').val(data.education_level);
+        form.find('input[name="slots"]').val(data.slots);
+
+        facultyDiv.addClass('hidden');
+        specializationDiv.addClass('hidden');
+
+    } else if (action === 'add') {
+        form.attr('action', '/teacher/topic/add');// Todo: while event listener------------------------------------------------------------------------------------------------------
+
+        form.attr('method', 'POST');
+        $('#topicModalLabel').text('Adaugă temă de licență');
+        modal.find('.modal-footer').find('.btn-primary').text('Adauga tema');
+
+        form.find('input[name="title"]').val('');
+        form.find('input[name="keywords"]').val('');
+        form.find('textarea[name="description"]').val('');
+        form.find('input[name="slots"]').val('');
+        form.find('select[name="education_level"]').val('bsc');
+
+        facultyDiv.removeClass('hidden');
+        specializationDiv.removeClass('hidden');
+    }
+    
+    $('#myModal').modal('show');
+  }
+
+
+//add listeners------------------------------------------------------------------------------------------------------
+  $(`.addBtn`).on('click', function() {
+    openModal('add');
   });
 
+  $('#topicsRow').on('click', 'editBtn', function() {
+    const topicId = $(this).data('id');
+    $.ajax({
+        url: `/teacher/api/topic/${topicId}`, 
+        type: 'GET',
+        success: function(data) {
+            console.log('Data:', data);
+            openModal('edit', data);
+        },
+        error: function(error) {
+            console.log('Eroare la preluarea datelor:', error);
+        }
+    });
+  });
+
+
+// Todo: while event listener------------------------------------------------------------------------------------------------------
+$("#topicsRow").on('click', '.editBtn', function() {
+  const modal = $('#topicModal');
+  const topicId = $(this).data('id');
+  const card = $(this).closest('.col');
+
+  modal.find('.modal-title').text('Editează temă de licență');
+  modal.find('.modal-footer').find('.btn-primary').text('Editează temă');
+  modal.find('.modal-footer').find('.btn-primary').attr('id', topicId);
+
+  modal.find('.modal-body').find('select[name="faculty_id"]').closest('div').addClass('hidden');
+  modal.find('.modal-body').find('select[name="specialization_id"]').closest('div').addClass('hidden');
+
+  let data = {
+    id: topicId,
+    title: card.find('h5').text().split(': ')[1],
+    description: card.find('.description').text().split(': ')[1],
+    keywords: card.find('.keywords').text().split(': ')[1],
+    slots: card.find('.slots').text().split(': ')[1],
+    education_level: card.find('.education_level').text().split(': ')[1],
+  };
+ 
+  openModal('edit',data);
+
 });
+
+
+//formselectgroups------------------------------------------------------------------------------------------------------
+  $("#inputGroupSelect01").on('change', function(e) {
+    e.preventDefault();
+    var selected = $(this).val();
+    $.ajax({
+        url: `/getSpecializations/${selected}`,
+        method: 'GET',
+        success: function(response) {
+            $("#inputGroupSelect02").empty();
+            
+            response.forEach(function(specialization) {
+                $("#inputGroupSelect02").append(
+                    `<option value="${specialization.id}">${specialization.name}</option>`
+                );
+            });
+        },
+        error: function(error) {
+            console.error('Error fetching specializations:', error);
+        }
+    });
+
+  });
 
 });

@@ -24,4 +24,15 @@ main {
 
 .topicsContainer {
   border: 1px solid #ccc;
+  border-bottom: none;
+}
+
+.card-footer{
+  border: 1px solid #ccc;
+  border-top: none;
+}
+
+
+.hidden {
+  display: none;
 }

@@ -19,7 +19,7 @@ app.use(session({ secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     store: new FileStore,
-    cookie: { maxAge: 3600000,secure: false, httpOnly: true }
+    cookie: { maxAge: 999999999,secure: false, httpOnly: true }
   })
 );
 
