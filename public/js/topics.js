@@ -33,6 +33,7 @@ $(document).ready(function() {
                           <div class="card" data-id="${response.topic.id}">
                               <img src="" class="card-img-top" alt="">
                               <div class="card-body">
+                                  <h4 class="card-title">Adaugat Recent</h4>
                                   <h5 class="card-title">Titlu: ${response.topic.title}</h5>
                                   <p class="card-text description">Descriere: ${truncateText(response.topic.description, 40)}</p>
                                   <p class="card-text keywords">Cuvinte cheie: ${response.topic.keywords}</p>
@@ -48,7 +49,7 @@ $(document).ready(function() {
                                   Actiuni
                               </a>
                               <ul class="dropdown-menu" id="topicActions">
-                                  <button type="button" class="btn dropdown-item editBtn" data-bs-toggle="modal" data-bs-target="#topicModal" data-id="${response.topic.id}">
+                                  <button type="button" class="btn dropdown-item editBtn" data-id="${response.topic.id}">
                                       Editează
                                   </button>
                                   <button type="button" class="btn dropdown-item cloneBtn" data-id="${response.topic.id}">Clonare</button>
@@ -77,7 +78,6 @@ $(document).ready(function() {
           console.log('Topic edited successfully:', response);
           alert('Topic edited successfully');
         }
-        
       },
       error: function(xhr, status, error) {
         console.error('Error adding topic:', error);
@@ -114,38 +114,54 @@ $(document).ready(function() {
     let specializationDiv = form.find('select[name="specialization_id"]').closest('div');
 
     if (action === 'edit') {
+        $('#modalMsg').text('');
         form.attr('action', `/teacher/topic/edit/${data.id}`);
         form.attr('method', 'PUT');
         $('#topicModalLabel').text('Editează temă de licență');
         modal.find('.modal-footer').find('.btn-primary').text('Editeaza tema');
 
-        form.find('input[name="title"]').val(data.title);
-        form.find('input[name="keywords"]').val(data.keywords);
-        form.find('textarea[name="description"]').val(data.description);
-        form.find('select[name="education_level"]').val(data.education_level);
-        form.find('input[name="slots"]').val(data.slots);
+        form.find('input[name="title"]').val(data.title).attr('readonly', false);
+        form.find('input[name="keywords"]').val(data.keywords).attr('readonly', false);
+        form.find('textarea[name="description"]').val(data.description).attr('readonly', false);
+        form.find('select[name="education_level"]').val(data.education_level).attr('disabled', false);
+        form.find('input[name="slots"]').val(data.slots).attr('readonly', false);
 
         facultyDiv.addClass('hidden');
         specializationDiv.addClass('hidden');
 
     } else if (action === 'add') {
-        form.attr('action', '/teacher/topic/add');// Todo: while event listener------------------------------------------------------------------------------------------------------
-
+        $('#modalMsg').text('');
+        form.attr('action', '/teacher/topic/add');
         form.attr('method', 'POST');
         $('#topicModalLabel').text('Adaugă temă de licență');
         modal.find('.modal-footer').find('.btn-primary').text('Adauga tema');
 
-        form.find('input[name="title"]').val('');
-        form.find('input[name="keywords"]').val('');
-        form.find('textarea[name="description"]').val('');
-        form.find('input[name="slots"]').val('');
-        form.find('select[name="education_level"]').val('bsc');
+        form.find('input[name="title"]').val('').attr('readonly', false);
+        form.find('input[name="keywords"]').val('').attr('readonly', false);
+        form.find('textarea[name="description"]').val('').attr('readonly', false);
+        form.find('input[name="slots"]').val('').attr('readonly', false);
+        form.find('select[name="education_level"]').val('bsc').attr('disabled', false);
 
         facultyDiv.removeClass('hidden');
         specializationDiv.removeClass('hidden');
-    }
+    } else if (action === 'clone') {
+        $('#modalMsg').text('Clonarea unei teme de licență va afisa exact aceasi tema de licenta si pentru studenti de la o specializare diferita de cea originala a acestui topic. Schimbati doar facultatea-specializarile studentiilor pentru care este disponibila aceasta tema.');
+        form.attr('action', '/teacher/topic/add');
+        form.attr('method', 'POST');
+        $('#topicModalLabel').text('Clonează temă de licență');
+        modal.find('.modal-footer').find('.btn-primary').text('Cloneaza tema');
+
+        form.find('input[name="title"]').val(data.title).attr('readonly', true);
+        form.find('input[name="keywords"]').val(data.keywords).attr('readonly', true);
+        form.find('textarea[name="description"]').val(data.description).attr('readonly', true);
+        form.find('input[name="slots"]').val(data.slots).attr('readonly', true);
+        form.find('select[name="education_level"]').val(data.education_level).attr('disabled', true);
+
+        facultyDiv.removeClass('hidden');
+        specializationDiv.removeClass('hidden');
+    };
     
-    $('#myModal').modal('show');
+    $('#topicModal').modal('show');
   }
 
 
@@ -162,6 +178,22 @@ $(document).ready(function() {
         success: function(data) {
             console.log('Data:', data);
             openModal('edit', data);
+        },
+        error: function(error) {
+            console.log('Eroare la preluarea datelor:', error);
+        }
+    });
+  });
+
+//clone topic------------------------------------------------------------------------------------------------------
+  $('#topicsRow').on('click', '.cloneBtn', function() {
+    const topicId = $(this).data('id');
+    $.ajax({
+        url: `/teacher/api/topic/${topicId}`, 
+        type: 'GET',
+        success: function(data) {
+            console.log('Data:', data);
+            openModal('clone', data);
         },
         error: function(error) {
             console.log('Eroare la preluarea datelor:', error);
@@ -189,7 +221,6 @@ $(document).ready(function() {
             console.error('Error fetching specializations:', error);
         }
     });
-
   });
 
 });

@@ -37,10 +37,12 @@
                                     Actiuni
                                 </a>
                                 <ul class="dropdown-menu" id="topicActions">
-                                    <button type="button" class="btn dropdown-item editBtn" data-bs-toggle="modal" data-bs-target="#topicModal" data-id="<%= topic.id %>">
+                                    <button type="button" class="btn dropdown-item editBtn" data-id="<%= topic.id %>">
                                         Editează
                                     </button> 
-                                    <button type="button" class="btn dropdown-item cloneBtn" data-id="<%= topic.id %>">Clonare</button>
+                                    <button type="button" class="btn dropdown-item cloneBtn" data-id="<%= topic.id %>">
+                                        Clonare
+                                    </button>
                                     <button type="button" class="btn dropdown-item deleteBtn" data-id="<%= topic.id %>">Sterge</button>
                                 </ul>
                             </div>
@@ -59,6 +61,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    <h6 id="modalMsg"></h6>
                     <form action="" method="" id="topicForm">
                         <div class="mb-3">
                             <label for="title" class="form-label">Titlu</label>

@@ -10,6 +10,7 @@ const teacherController = require('../controllers/teacher');
 
 router.get('/', teacherController.home);
 router.get('/about', teacherController.about);
+router.get('/logout', teacherController.logout);
 router.get('/topics', teacherController.teacherTopics);
 router.get('/topic/:id', teacherController.teacherTopic);
 router.get('/api/topic/:id', teacherController.apiTeacherTopic);

@@ -13,6 +13,11 @@ const about = (req, res) => {
   res.render('pages/teacher/about');
 };
 
+const logout = (req, res) => {
+  delete req.session.loggedInUser;
+  res.redirect('/');
+};
+
 const teacherTopics = async (req, res) => {
   try{
     const teacherId = req.session.loggedInUser.id;
@@ -197,6 +202,7 @@ const deleteTopic = async (req, res) => {
 module.exports = {
   home,
   about,
+  logout,
   teacherTopics,
   teacherTopic,
   apiTeacherTopic,
