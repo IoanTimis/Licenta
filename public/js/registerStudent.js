@@ -3,7 +3,7 @@ $(document).ready(function() {
       e.preventDefault();
       var selected = $(this).val();
       $.ajax({
-          url: `/getSpecializations/${selected}`,
+          url: `/api/getSpecializations/${selected}`,
           method: 'GET',
           success: function(response) {
               $("#inputGroupSelect02").empty();

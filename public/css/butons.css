@@ -11,6 +11,19 @@
     background-color: green;
 }
 
+.addSpecializationsBtn{
+    background-color: black;
+    color: white;
+    margin-right: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.addSpecializationsBtn:hover {
+    opacity: 0.8;
+    background-color: green;
+}
+
 /* .editBtn{
     background-color: black;
     color: white;

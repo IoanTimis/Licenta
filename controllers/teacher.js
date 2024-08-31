@@ -112,7 +112,7 @@ const addTopic = async (req, res) => {
   try{
     const teacherId = req.session.loggedInUser.id;
 
-    const { title, description, keywords, slots, education_level, specialization_id } = req.body;
+    const { title, description, keywords, slots, education_level, specialization_ids } = req.body;
 
     const topic = await Topic.create({
       title: title,
@@ -128,15 +128,16 @@ const addTopic = async (req, res) => {
       return res.status(500).json({ message: 'Error adding topic' });
     }
 
-    const specialization_topic = await specializationTopic.create({
-      specialization_id: specialization_id,
-      topic_id: topic.id
-    });
-    
+    for (const specialization_id of specialization_ids) {
+      const specialization_topic = await specializationTopic.create({
+        specialization_id: specialization_id,
+        topic_id: topic.id
+      });
 
-    if (!specialization_topic) {
-      return res.status(500).json({ message: 'Error adding specializationTopic' });
-    };
+      if (!specialization_topic) {
+        return res.status(404).json({ message: 'Specialization not found' });
+      }
+    }
 
     res.json({ topic: topic });
   }

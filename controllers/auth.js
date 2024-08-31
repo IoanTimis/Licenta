@@ -6,7 +6,7 @@ const Specialization = require('../models/specialization');
 const { query } = require('express');
 
 const getSpecializations = async (req, res) => {
-  const faculty_id = req.params.facultyId;
+  const faculty_id = req.params.id;
   
   try {
       const specializations = await Specialization.findAll({ where: { faculty_id: faculty_id } });

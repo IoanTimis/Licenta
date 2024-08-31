@@ -4,7 +4,7 @@ const router  = express.Router();
 
 const authController = require('../controllers/auth');
 
-router.get('/getSpecializations/:facultyId', authController.getSpecializations);
+router.get('/api/getSpecializations/:id', authController.getSpecializations);
 
 router.get('/register/student', authController.registerStudent);
 router.post('/register/student', authController.registerStudentPost);

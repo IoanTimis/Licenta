@@ -13,6 +13,14 @@ $(document).ready(function() {
     var url = form.attr('action');
     var action = form.attr('method');
 
+    let selectedSpecializations = [];
+    $('.chooseSpecialization').each(function() {
+      const selectedValue = $(this).val();
+      if (selectedValue) {
+          selectedSpecializations.push(selectedValue);
+      }
+    });
+
     $.ajax({
       url: url,
       method: action,
@@ -24,7 +32,7 @@ $(document).ready(function() {
         slots: form.find('input[name="slots"]').val(),
         education_level: form.find('select[name="education_level"]').val(),
         faculty_id: form.find('select[name="faculty_id"]').val(),
-        specialization_id: form.find('select[name="specialization_id"]').val()
+        specialization_ids: selectedSpecializations
       },
       success: function(response) {
         if(action === 'POST') {
@@ -68,7 +76,8 @@ $(document).ready(function() {
           form.find('select[name="education_level"]').val('bsc');
           console.log('Topic added successfully:', response);
           alert('Topic added successfully');
-        } else {
+
+        } else if(action === 'PUT') {
           const card = document.querySelector(`.card[data-id="${response.topic.id}"]`);
           card.querySelector('.card-title').textContent = `Titlu: ${response.topic.title}`;
           card.querySelector('.description').textContent = `Descriere: ${truncateText(response.topic.description, 40)}`;
@@ -79,97 +88,13 @@ $(document).ready(function() {
           alert('Topic edited successfully');
         }
       },
-      error: function(xhr, status, error) {
+      error: function(error) {
         console.error('Error adding topic:', error);
       }
     });
   });
 
-//Delete topic------------------------------------------------------------------------------------------------------
-  $("#topicsRow").on('click', '.deleteBtn', function() {
-    var topicId = $(this).data('id');
-    var card = $(this).closest('.col');
-    console.log('Topic id:', topicId);
-    $.ajax({
-        url: `/teacher/topic/delete/${topicId}`,
-        method: 'DELETE',
-        success: function(response) {
-            card.remove();
-            console.log('Topic deleted successfully:', response);
-            alert('Topic deleted successfully');
-        },
-        error: function(xhr, status, error) {
-            console.error('Error deleting topic:', error);
-        }
-    });
-  });
-
-
-
-//Populating/clear the modal data------------------------------------------------------------------------------------------------------
-  function openModal(action, data = {}) {
-    let modal = $('#topicModal');
-    let form = $('#topicForm');
-    let facultyDiv = form.find('select[name="faculty_id"]').closest('div');
-    let specializationDiv = form.find('select[name="specialization_id"]').closest('div');
-
-    if (action === 'edit') {
-        $('#modalMsg').text('');
-        form.attr('action', `/teacher/topic/edit/${data.id}`);
-        form.attr('method', 'PUT');
-        $('#topicModalLabel').text('Editează temă de licență');
-        modal.find('.modal-footer').find('.btn-primary').text('Editeaza tema');
-
-        form.find('input[name="title"]').val(data.title).attr('readonly', false);
-        form.find('input[name="keywords"]').val(data.keywords).attr('readonly', false);
-        form.find('textarea[name="description"]').val(data.description).attr('readonly', false);
-        form.find('select[name="education_level"]').val(data.education_level).attr('disabled', false);
-        form.find('input[name="slots"]').val(data.slots).attr('readonly', false);
-
-        facultyDiv.addClass('hidden');
-        specializationDiv.addClass('hidden');
-
-    } else if (action === 'add') {
-        $('#modalMsg').text('');
-        form.attr('action', '/teacher/topic/add');
-        form.attr('method', 'POST');
-        $('#topicModalLabel').text('Adaugă temă de licență');
-        modal.find('.modal-footer').find('.btn-primary').text('Adauga tema');
-
-        form.find('input[name="title"]').val('').attr('readonly', false);
-        form.find('input[name="keywords"]').val('').attr('readonly', false);
-        form.find('textarea[name="description"]').val('').attr('readonly', false);
-        form.find('input[name="slots"]').val('').attr('readonly', false);
-        form.find('select[name="education_level"]').val('bsc').attr('disabled', false);
-
-        facultyDiv.removeClass('hidden');
-        specializationDiv.removeClass('hidden');
-    } else if (action === 'clone') {
-        $('#modalMsg').text('Clonarea unei teme de licență va afisa exact aceasi tema de licenta si pentru studenti de la o specializare diferita de cea originala a acestui topic. Schimbati doar facultatea-specializarile studentiilor pentru care este disponibila aceasta tema.');
-        form.attr('action', '/teacher/topic/add');
-        form.attr('method', 'POST');
-        $('#topicModalLabel').text('Clonează temă de licență');
-        modal.find('.modal-footer').find('.btn-primary').text('Cloneaza tema');
-
-        form.find('input[name="title"]').val(data.title).attr('readonly', true);
-        form.find('input[name="keywords"]').val(data.keywords).attr('readonly', true);
-        form.find('textarea[name="description"]').val(data.description).attr('readonly', true);
-        form.find('input[name="slots"]').val(data.slots).attr('readonly', true);
-        form.find('select[name="education_level"]').val(data.education_level).attr('disabled', true);
-
-        facultyDiv.removeClass('hidden');
-        specializationDiv.removeClass('hidden');
-    };
-    
-    $('#topicModal').modal('show');
-  }
-
-
-//add listeners------------------------------------------------------------------------------------------------------
-  $(`.addBtn`).on('click', function() {
-    openModal('add');
-  });
-
+//Edit topic------------------------------------------------------------------------------------------------------  
   $('#topicsRow').on('click', '.editBtn', function() {
     const topicId = $(this).data('id');
     $.ajax({
@@ -185,7 +110,34 @@ $(document).ready(function() {
     });
   });
 
-//clone topic------------------------------------------------------------------------------------------------------
+
+//Delete topic------------------------------------------------------------------------------------------------------
+  $("#topicsRow").on('click', '.deleteBtn', function(e) {
+    e.preventDefault();
+    var topicId = $(this).data('id');
+    var card = $(this).closest('.col');
+    console.log('Topic id:', topicId);
+    const confirmDelete = confirm('Ești sigur că vrei să ștergi acest obiect?');
+
+    if (!confirmDelete) {
+        return;
+    }
+    
+    $.ajax({
+        url: `/teacher/topic/delete/${topicId}`,
+        method: 'DELETE',
+        success: function(response) {
+            card.remove();
+            console.log('Topic deleted successfully:', response);
+            alert('Topic deleted successfully');
+        },
+        error: function(error) {
+            console.error('Error deleting topic:', error);
+        }
+    });
+  });
+
+//Clone topic------------------------------------------------------------------------------------------------------
   $('#topicsRow').on('click', '.cloneBtn', function() {
     const topicId = $(this).data('id');
     $.ajax({
@@ -201,18 +153,35 @@ $(document).ready(function() {
     });
   });
 
-//formselectgroups------------------------------------------------------------------------------------------------------
-  $("#inputGroupSelect01").on('change', function(e) {
+//Small functions------------------------------------------------------------------------------------------------------
+
+  $(`.addBtn`).on('click', function() {
+    openModal('add');
+  });
+
+  $('.addSpecializationsBtn').on('click', function() {
+    html =`<div class="mb-3">
+            <label for="" class="form-label">Alege specializarea</label>
+            <select class="form-select chooseSpecialization"  name="specialization_id[]">
+            </select>
+          </div>`;
+    $('#selectSpecializationsContainer').append(html);
+    $("#inputGroupSelectFaculty").trigger('change');
+  });
+
+//Formselectgroups------------------------------------------------------------------------------------------------------
+  $("#inputGroupSelectFaculty").on('change', function(e) {
     e.preventDefault();
+    console.log('Faculty changed');
     var selected = $(this).val();
     $.ajax({
-        url: `/getSpecializations/${selected}`,
+        url: `/api/getSpecializations/${selected}`,
         method: 'GET',
         success: function(response) {
-            $("#inputGroupSelect02").empty();
+            $(".chooseSpecialization").empty();
             
             response.forEach(function(specialization) {
-                $("#inputGroupSelect02").append(
+                $(".chooseSpecialization").append(
                     `<option value="${specialization.id}">${specialization.name}</option>`
                 );
             });
@@ -223,4 +192,74 @@ $(document).ready(function() {
     });
   });
 
+
+//Populating/clear the modal data------------------------------------------------------------------------------------------------------
+  function openModal(action, data = {}) {
+    let modal = $('#topicModal');
+    let form = $('#topicForm');
+    let facultyDiv = form.find('select[name="faculty_id"]').closest('div');
+    let specializationDiv = $('#selectSpecializationsContainer');
+    let addSpecializationsBtn = $('.addSpecializationsBtn');
+
+    specializationDiv.empty();
+    let html =  `<div class="mb-3">
+                    <label for="" class="form-label">Alege specializarea</label>
+                    <select class="form-select chooseSpecialization" name="specialization_id[]"></select>
+                </div>`;
+    specializationDiv.append(html);
+    
+    if (action === 'add') {
+        $('#modalMsg').text('');
+        form.attr('action', '/teacher/topic/add');
+        form.attr('method', 'POST');
+        $('#topicModalLabel').text('Adaugă temă de licență');
+        modal.find('.modal-footer').find('.btn-primary').text('Adauga tema');
+
+        form.find('input[name="title"]').val('');
+        form.find('input[name="keywords"]').val('');
+        form.find('textarea[name="description"]').val('');
+        form.find('input[name="slots"]').val('');
+        form.find('select[name="education_level"]').val('bsc');
+
+        form.find('select[name="faculty_id"]').val(data.faculty_id).attr('disabled', false);
+        form.find('select[name="specialization"]').val(data.specialization_id).attr('disabled', false);
+
+    } else if (action === 'edit') {
+      $('#modalMsg').text('');
+      form.attr('action', `/teacher/topic/edit/${data.id}`);
+      form.attr('method', 'PUT');
+      $('#topicModalLabel').text('Editează temă de licență');
+      modal.find('.modal-footer').find('.btn-primary').text('Editeaza tema');
+
+      form.find('input[name="title"]').val(data.title);
+      form.find('input[name="keywords"]').val(data.keywords);
+      form.find('textarea[name="description"]').val(data.description);
+      form.find('input[name="slots"]').val(data.slots);
+      form.find('select[name="education_level"]').val(data.education_level);
+
+      facultyDiv.hide();
+      form.find('select[name="faculty_id"]').val(data.faculty_id).attr('disabled', true);
+      specializationDiv.hide();
+      form.find('select[name="specialization"]').val(data.specialization_id).attr('disabled', true);
+      addSpecializationsBtn.hide();
+
+    } else if (action === 'clone') {
+        $('#modalMsg').text('mesaj');
+        form.attr('action', '/teacher/topic/add');
+        form.attr('method', 'POST');
+        $('#topicModalLabel').text('Clonează temă de licență');
+        modal.find('.modal-footer').find('.btn-primary').text('Cloneaza tema');
+
+        form.find('input[name="title"]').val(data.title);
+        form.find('input[name="keywords"]').val(data.keywords);
+        form.find('textarea[name="description"]').val(data.description);
+        form.find('input[name="slots"]').val(data.slots);
+        form.find('select[name="education_level"]').val(data.education_level);
+
+        form.find('select[name="faculty_id"]').val(data.faculty_id).attr('disabled', false);
+        form.find('select[name="specialization"]').val(data.specialization_id).attr('disabled', false);
+    };
+    
+    $('#topicModal').modal('show');
+  };
 });

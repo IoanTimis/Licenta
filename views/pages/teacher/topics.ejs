@@ -53,7 +53,7 @@
         </div> 
     </main>
     
-    <div class="modal fade" id="topicModal" tabindex="-1" aria-labelledby="topicModalLabel" aria-hidden="true">
+    <div class="modal fade" id="topicModal" tabindex="-1" aria-labelledby="topicModalLabel" aria="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -79,26 +79,29 @@
                             <label for="slots" class="form-label">Număr de locuri</label>
                             <input type="number" class="form-control"  name="slots" required>
                         </div>
-                        <div class="mb-3 hidden">
+                        <div class="mb-3">
                             <label for="education_level" class="form-label">Nivel educatie</label>
                             <select class="form-select"  name="education_level" required>
                                 <option value="bsc">Licență</option>
                                 <option value="msc">Masterat</option>
                             </select>
                         </div>
-                        <div class="mb-3 hidden">
-                            <label for="inputGroupSelect01" class="form-label">Alege facultatea</label>
-                            <select class="form-select" id="inputGroupSelect01" name="faculty_id">
+
+                        <div class="mb-3">
+                            <label for="inputGroupSelectFaculty" class="form-label">Alege facultatea</label>
+                            <select class="form-select" id="inputGroupSelectFaculty" name="faculty_id">
                                 <option value=""></option>
                                 <% faculties.forEach(function(faculty) { %>          
                                     <option value="<%= faculty.id %>"><%= faculty.name %></option>
                                 <% }); %>
                             </select>
                         </div>
+                        <div id="selectSpecializationsContainer" class="">
+                        </div>
                         <div class="mb-3">
-                            <label for="inputGroupSelect02" class="form-label">Alege specializarea</label>
-                            <select class="form-select" id="inputGroupSelect02" name="specialization_id">
-                            </select>
+                            <button type="button" class="btn addSpecializationsBtn">
+                                Adauga specializare
+                            </button>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Închide</button>
