@@ -3,6 +3,8 @@ const Specialization = require('../models/specialization');
 const SpecializationTopic = require('../models/specializationTopic');
 const User = require('../models/user');
 const { truncateText } = require('../helpers/utils');
+const { Op } = require('sequelize');
+const topicRequest = require('../models/topicRequest');
 
 const home = (req, res) => {
   res.render('pages/student/index');
@@ -24,7 +26,10 @@ const getStudentTopics = async (req, res) => {
       //Posibil sa fie nevoie de modificari pt a nu afisa ce topicurile de masterat sau licenta in functie de nivelul de studii
     const topics = await specialization.getTopics({
       where: {
-        education_level: education_level
+        education_level: education_level,
+        slots: {
+          [Op.gt]: 0
+        }
       },
       include: [{
         model: User,  
@@ -68,6 +73,65 @@ const topicPage = async (req, res) => {
   }
 };
 
+//request topics------------------------------------------------------------------------------------------------------
+
+const getRequestTopics = async (req, res) => {
+  try {
+    const student_id = req.session.loggedInUser.id;
+
+    const requests = await topicRequest.findAll({
+      where: {
+        student_id: student_id
+      },
+      include: [{
+        model: User,
+        as: 'teacher'
+      },
+      {
+        model: Topic,
+        as: 'topic'
+      }]
+    });
+
+    if (!requests) {
+      return res.status(404).json({ message: 'Requests not found' });
+    }
+
+    return res.render('pages/student/requests', { requests: requests, truncateText: truncateText });
+  }
+  catch (error) {
+    console.error('Error getting requests:', error);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
+const getRequestTopic = async (req, res) => {
+  try {
+    const request_id = req.params.id;
+
+    const request = await topicRequest.findByPk(request_id, {
+      include: [{
+        model: User,
+        as: 'teacher'
+      },
+      {
+        model: Topic,
+        as: 'topic'
+      }]
+    });
+
+    if (!request) {
+      return res.status(404).json({ message: 'Request not found' });
+    }
+
+    return res.render('pages/student/request', { request: request });
+  }
+  catch (error) {
+    console.error('Error getting request:', error);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
 
 
 
@@ -77,5 +141,7 @@ module.exports = {
   home,
   about,
   getStudentTopics,
-  topicPage
+  topicPage,
+  getRequestTopics,
+  getRequestTopic
 };

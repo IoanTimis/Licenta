@@ -1,0 +1,44 @@
+<html lang="en">
+<head>
+    <%- include('../../partials/head') %>
+</head>
+<body class="container">
+    <header>
+        <%- include('../../partials/studentHeader') %>
+    </header>
+    <main class="flex-grow-1">
+        <div class="container topicsContainer">
+          <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+            <% requests.forEach(function(request) { %>
+                    <div class="col">
+                        <a href="/student/request-topic/<%=request.id%>" class="text-decoration-none text-dark">
+                        <div class="card">
+                            <img src="" class="card-img-top" alt="">
+                            <div class="card-body">
+                                <h5 class="card-title">Titlu: <%= request.topic.title %></h5>
+                                <p>Descriere: <%= truncateText(request.topic.description, 40) %></p>
+                                <p class="card-text">Cuvinte cheie: <%= request.topic.keywords %></p>
+                                <p class="card-text">Locuri: <%= request.topic.slots %></p>
+                                <p class="card-text">Tip: <%= request.topic.education_level %></p>
+                                <p class="card-text">Profesor: <%= request.teacher.name %></p>
+                                <p class="card-text">Mesaj catre profesor: <%= truncateText(request.student_message,40) %></p>
+                                <p class="card-text">Raspuns: <%= truncateText(request.teacher_message,40) %></p>
+                            </div>
+                        </div>
+                    </a>
+                    <div class="card-footer d-flex justify-content-between">
+                      <button type="button" class="btn btn-danger" data-id="<%= request.id %>">
+                          Sterge
+                      </button>
+                    </div>
+                </div> 
+            <% }); %>
+        </div>
+      </div> 
+    </main>
+    
+    <footer class="footer bg-light text-center text-lg-start">
+        <%- include('../../partials/footer') %>
+    </footer>
+</body>
+</html>

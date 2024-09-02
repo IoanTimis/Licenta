@@ -1,0 +1,42 @@
+<html lang="en">
+<head>
+    <%- include('../../partials/head') %>
+</head>
+<body class="container">
+    <header>
+        <%- include('../../partials/teacherHeader') %>
+    </header>
+    <main class="flex-grow-1">
+        <div class="container requestsContainer">
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+                <% studentRequests.forEach(function(studentRequest) { %>
+                    <div class="col">
+                        <a href="/teacher/student-request/<%=studentRequest.id%>" class="text-decoration-none text-dark">
+                            <div class="card">
+                                <img src="" class="card-img-top" alt="">
+                                <div class="card-body">
+                                    <h5 class="card-title">Student: <%= studentRequest.student.name %></h5>
+                                    <p class="card-text">Email: <%= studentRequest.student.email %></p>
+                                    <p class="card-text">Message: <%= studentRequest.message %></p>                          
+                                </div>
+                            </div>
+                        </a>
+                        <div class="card-footer d-flex justify-content-between">
+                            <button type="button" class="btn btn-primary acceptBtn" data-id="<%= studentRequest.id %>">
+                                Accepta
+                            </button> 
+                            <button type="button" class="btn btn-danger rejectBtn" data-id="<%= studentRequest.id %>">
+                                Respinge
+                            </button>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer bg-light text-center text-lg-start">
+        <%- include('../../partials/footer') %>
+    </footer>
+</body>
+</html>

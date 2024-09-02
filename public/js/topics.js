@@ -160,14 +160,22 @@ $(document).ready(function() {
   });
 
   $('.addSpecializationsBtn').on('click', function() {
-    html =`<div class="mb-3">
-            <label for="" class="form-label">Alege specializarea</label>
-            <select class="form-select chooseSpecialization"  name="specialization_id[]">
-            </select>
-          </div>`;
+    let html = `
+            <div class="mb-3 specialization-div">
+                <label for="" class="form-label">Alege specializarea</label>
+                <div class="d-flex align-items-center">
+                    <select class="form-select chooseSpecialization" name="specialization_id[]"></select>
+                    <button type="button" class="btn-close btn-danger removeSpecialization"></button>
+                </div>
+            </div>
+    `;  
     $('#selectSpecializationsContainer').append(html);
     $("#inputGroupSelectFaculty").trigger('change');
   });
+
+  $('#selectSpecializationsContainer').on('click', '.removeSpecialization', function() {
+    $(this).closest('.specialization-div').remove(); // Șterge div-ul părinte
+});
 
 //Formselectgroups------------------------------------------------------------------------------------------------------
   $("#inputGroupSelectFaculty").on('change', function(e) {

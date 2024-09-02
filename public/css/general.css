@@ -27,6 +27,11 @@ main {
   border-bottom: none;
 }
 
+.requestsContainer{
+  border: 1px solid #ccc;
+  border-bottom: none;
+}
+
 .card-footer{
   border: 1px solid #ccc;
   border-top: none;

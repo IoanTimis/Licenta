@@ -64,3 +64,45 @@
     opacity: 0.8;
     background-color: red;
 }
+
+
+.acceptBtn{
+    background-color: black;
+    color: white;
+    border: none;
+    margin-right: 10px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.acceptBtn:hover {
+    opacity: 0.8;
+    background-color: green;
+}
+
+.rejectBtn{
+    background-color: black;
+    color: white;
+    margin-left: 10px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+.rejectBtn:hover {
+    opacity: 0.8;
+    background-color: red;
+}
+
+.applyBtn{
+    background-color: black;
+    color: white;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+.applyBtn:hover {
+    opacity: 0.8;
+    background-color: green;
+}

@@ -44,6 +44,7 @@ app.use(cookieParser());
 const sequelize = require('./config/database');
 const faculty = require('./models/faculty');
 const user = require('./models/user');
+const topicRequest = require('./models/topicRequest');
 const topic = require('./models/topic');
 const specialization = require('./models/specialization');
 const specializationTopic = require('./models/specializationTopic');

@@ -1,11 +1,11 @@
 <html lang="en">
 <head>
     <%- include('../../partials/head') %>
+    <script src="/js/topics.js"></script>
 </head>
 <body class="container">
     <header>
         <%- include('../../partials/teacherHeader') %>
-        <script src="/js/topics.js"></script>
     </header>
     <main class="flex-grow-1">
         <div class="container topicsContainer" id="topicsContainer">
@@ -27,7 +27,6 @@
                                     <p class="card-text keywords">Cuvinte cheie: <%= topic.keywords %></p>
                                     <p class="card-text slots">Locuri: <%= topic.slots %></p>
                                     <p class="card-text education_level">Tip: <%= topic.education_level %></p>
-                                    <p><%= topic.id %></p>
                                 </div>
                             </div>
                         </a>

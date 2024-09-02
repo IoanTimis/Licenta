@@ -1,0 +1,28 @@
+<html lang="en">
+<head>
+    <%- include('../../partials/head') %>
+</head>
+<body class="container">
+    <header>
+        <%- include('../../partials/teacherHeader') %>
+    </header>
+    
+    <main class="container">
+      <h5 class="card-title">Cerere de student</h5>
+      <p class="card-text">Nume: <%= studentRequest.student.name %></p>
+      <p class="card-text">Email: <%= studentRequest.student.email %></p>
+      <p class="card-text">Mesaj: <%= studentRequest.message %></p>
+
+      <button type="button" class="btn btn-primary" data-id="<%= studentRequest.id %>">
+          Accepta
+      </button> 
+      <button type="button" class="btn btn-danger" data-id="<%= studentRequest.id %>">
+          Respinge
+      </button>
+    </main>
+
+    <footer class="footer bg-light text-center text-lg-start">
+        <%- include('../../partials/footer') %>
+    </footer>
+</body>
+</html>

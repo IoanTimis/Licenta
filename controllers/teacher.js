@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const topicRequest = require('../models/topicRequest');
 const Topic = require('../models/topic');
 const { truncateText } = require('../helpers/utils');
 const Faculty = require('../models/faculty');
@@ -195,9 +196,67 @@ const deleteTopic = async (req, res) => {
   }
 };
 
+//Student requests------------------------------------------------------------------------------------------------------
+const studentRequests = async (req, res) => {
+  try{
+    const teacherId = req.session.loggedInUser.id;
 
+    const teacher = await User.findByPk(teacherId);
 
+    if (!teacher) {
+      return res.status(404).send('Teacher not found');
+    }
 
+    const requests = await topicRequest.findAll({
+      where: { teacher_id: teacherId }
+    });
+
+    if (!requests) {
+      return res.status(404).send('Requests not found');
+    }
+
+   for(const request of requests){
+      const student = await User.findByPk(request.student_id);
+      if (!student) {
+        return res.status(404).send('Student not found');
+      }
+
+      request.student = student;
+    }
+
+    res.render('pages/teacher/studentRequests', { studentRequests: requests});
+  }
+  catch (error) {
+    console.error('Error getting requests:', error);
+    res.status(500).send('Internal Server Error');
+  }
+}
+
+const studentRequest = async (req, res) => {
+  try{
+    const requestId = req.params.id;
+
+    const request = await topicRequest.findByPk(requestId);
+
+    if (!request) {
+      return res.status(404).send('Request not found');
+    }
+
+    const student = await User.findByPk(request.student_id);
+
+    if (!student) {
+      return res.status(404).send('Student not found');
+    }
+
+    request.student = student;
+
+    res.render('pages/teacher/studentRequest', { studentRequest: request });
+  }
+  catch (error) {
+    console.error('Error getting request:', error);
+    res.status(500).send('Internal Server Error');
+  }
+}
 
 
 module.exports = {
@@ -210,5 +269,7 @@ module.exports = {
   getSpecializations,
   addTopic,
   editTopic,
-  deleteTopic
+  deleteTopic,
+  studentRequests,
+  studentRequest
 };
