@@ -23,41 +23,18 @@
                                     <p class="card-text">Profesor: <%= topic.user.name %></p>
                                 </div>
                             </div>
-                        </a>
+                        
                         <div class="card-footer d-flex justify-content-between">
-                            <button type="button" class="btn btn-primary applyBtn" data-bs-toggle="modal" data-bs-target="#reqMessageModal">
-                                Aplica
+                            <button type="button" class="btn btn-primary applyBtn">
+                                Detalii
                             </button>
                           </div>
+                        </a>
                     </div>
             <% }); %>
         </div>
     </div>
     </main>
-
-    <div class="modal fade" id="reqMessageModal" tabindex="-1" aria-labelledby="reqMessageModalLabel" aria="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="reqMessageModalLabel"></h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <h6 id="modalMsg"></h6>
-                    <form action="" method="" id="reqMessageForm">
-                        <div class="mb-3">
-                            <label for="message" class="form-label">Mesaj</label>
-                            <textarea class="form-control"  name="message" rows="3"></textarea>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Închide</button>
-                            <button type="submit" class="btn btn-primary">Aplica</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
     
     <footer class="footer bg-light text-center text-lg-start">
         <%- include('../../partials/footer') %>

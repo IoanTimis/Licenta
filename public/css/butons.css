@@ -51,16 +51,27 @@
     background-color: yellow;
 }
 
-/* .deleteBtn{
+.deleteBtn{
     background-color: black;
     color: white;
-    margin-left: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.deleteBtn:hover {
+    opacity: 0.8;
+    background-color: red;
+}
+
+.deleteBtnCard {
+    background-color: black;
+    color: white;
     border: none;
     cursor: pointer;
     width: 100%;
-} */
+}
 
-.deleteBtn:hover {
+.deleteBtnCard:hover {
     opacity: 0.8;
     background-color: red;
 }

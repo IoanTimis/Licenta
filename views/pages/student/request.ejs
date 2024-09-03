@@ -2,13 +2,14 @@
 <html lang="en">
 <head>
     <%- include('../../partials/head') %>
+    <script src="/js/student-teacherReq.js"></script>
 </head>
 <body class="container">
     <header>
         <%- include('../../partials/studentHeader') %>
     </header>
     <main>
-        <h1>Detalii despre: <%= request.topic.title %></h1>
+        <h1>Ai aplicat cu succes pentru: <%= request.topic.title %></h1>
         <p>Descriere: <%= request.topic.description %></p>
         <p>Locuri disponibile: <%= request.topic.slots %></p>
         <p>Cuvinte cheie: <%= request.topic.keywords %></p>
@@ -17,7 +18,7 @@
         <p>Email profesor: <%= request.teacher.email %></p>
         <p>Mesaj catre profesor: <%= request.student_message %></p>
         <p>Raspuns: <%= request.teacher_message %></p>
-        <button type="button" class="btn btn-danger" data-id="<%= request.id %>">
+        <button type="button" class="btn btn-danger deleteBtn" data-id="<%= request.id %>">
             Sterge
         </button>
     </main>

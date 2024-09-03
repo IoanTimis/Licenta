@@ -5,6 +5,8 @@ const User = require('../models/user');
 const { truncateText } = require('../helpers/utils');
 const { Op } = require('sequelize');
 const topicRequest = require('../models/topicRequest');
+const sanitizeHtml = require('sanitize-html');
+
 
 const home = (req, res) => {
   res.render('pages/student/index');
@@ -12,6 +14,11 @@ const home = (req, res) => {
 
 const about = (req, res) => {
   res.render('pages/student/about');
+};
+
+const logout = (req, res) => {
+  delete req.session.loggedInUser;
+  res.redirect('/');
 };
 
 const getStudentTopics = async (req, res) => {
@@ -65,7 +72,17 @@ const topicPage = async (req, res) => {
       return res.status(404).json({ message: 'Topic not found' });
     }
 
-    return res.render('pages/student/topic', { topic: topic });
+    topicRequested = await topicRequest.findOne({
+      where: {
+        topic_id: topic_id
+      }
+    });
+
+    if (topicRequested) {
+      return res.render('pages/student/topic', { topic: topic, requested: true });
+    }
+
+    res.render('pages/student/topic', { topic: topic, requested: false });
   }
   catch (error) {
     console.error('Error getting topic:', error);
@@ -96,7 +113,10 @@ const getRequestTopics = async (req, res) => {
     if (!requests) {
       return res.status(404).json({ message: 'Requests not found' });
     }
-
+    const logout = (req, res) => {
+      delete req.session.loggedInUser;
+      res.redirect('/');
+    };
     return res.render('pages/student/requests', { requests: requests, truncateText: truncateText });
   }
   catch (error) {
@@ -124,10 +144,54 @@ const getRequestTopic = async (req, res) => {
       return res.status(404).json({ message: 'Request not found' });
     }
 
-    return res.render('pages/student/request', { request: request });
+    return res.render('pages/student/request', { request: request});
   }
   catch (error) {
     console.error('Error getting request:', error);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
+const newRequest = async (req, res) => {
+  try {
+    const student_id = req.session.loggedInUser.id;
+    const { topic_id, teacher_id, message } = req.body;
+    sanitizeHtml(message);
+
+    const request = await topicRequest.create({
+      student_id: student_id,
+      teacher_id: teacher_id,
+      topic_id: topic_id,
+      student_message: message
+    });
+
+    if (!request) {
+      return res.status(500).json({ message: 'Error creating request' });
+    }
+
+    res.redirect(`/student/request-topic/${request.id}`);
+  }
+  catch (error) {
+    console.error('Error creating request:', error);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
+const deleteRequest = async (req, res) => {
+  try {
+    const request_id = req.params.id;
+    
+    const request = await topicRequest.findByPk(request_id);
+    if (!request) {
+      return res.status(404).json({ message: 'Request not found' });
+    }
+
+    await request.destroy();
+    
+    res.status(204).send();
+  }
+  catch (error) {
+    console.error('Error deleting request:', error);
     res.status(500).send('Internal Server Error');
   }
 };
@@ -136,12 +200,14 @@ const getRequestTopic = async (req, res) => {
 
 
 
-
 module.exports = {
   home,
   about,
+  logout,
   getStudentTopics,
   topicPage,
   getRequestTopics,
-  getRequestTopic
+  getRequestTopic,
+  newRequest,
+  deleteRequest
 };

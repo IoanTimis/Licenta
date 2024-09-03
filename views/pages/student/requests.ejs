@@ -5,6 +5,7 @@
 <body class="container">
     <header>
         <%- include('../../partials/studentHeader') %>
+        <script src="/js/student-teacherReq.js"></script>
     </header>
     <main class="flex-grow-1">
         <div class="container topicsContainer">
@@ -21,13 +22,22 @@
                                 <p class="card-text">Locuri: <%= request.topic.slots %></p>
                                 <p class="card-text">Tip: <%= request.topic.education_level %></p>
                                 <p class="card-text">Profesor: <%= request.teacher.name %></p>
-                                <p class="card-text">Mesaj catre profesor: <%= truncateText(request.student_message,40) %></p>
-                                <p class="card-text">Raspuns: <%= truncateText(request.teacher_message,40) %></p>
+                                <% if (request.student_message) { %>
+                                    <p class="card-text">Mesaj către profesor: <%= truncateText(request.student_message, 40) %></p>
+                                <% } else { %>
+                                    <p class="card-text">Mesaj către profesor: Nu a fost trimis niciun mesaj de către student.</p>
+                                <% } %>
+                                
+                                <% if (request.teacher_message) { %>
+                                    <p class="card-text">Răspuns de la profesor: <%= truncateText(request.teacher_message, 40) %></p>
+                                <% } else { %>
+                                    <p class="card-text">Răspuns de la profesor: Nu a fost primit niciun răspuns.</p>
+                                <% } %>                                
                             </div>
                         </div>
                     </a>
                     <div class="card-footer d-flex justify-content-between">
-                      <button type="button" class="btn btn-danger" data-id="<%= request.id %>">
+                      <button type="button" class="btn btn-danger deleteBtnCard" data-id="<%= request.id %>">
                           Sterge
                       </button>
                     </div>

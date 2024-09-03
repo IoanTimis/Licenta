@@ -5,6 +5,8 @@ const { truncateText } = require('../helpers/utils');
 const Faculty = require('../models/faculty');
 const Specialization = require('../models/specialization');
 const specializationTopic = require('../models/specializationTopic');
+const sanitizeHtml = require('sanitize-html');
+
 
 const home = (req, res) => {
   res.render('pages/teacher/index');
@@ -114,6 +116,9 @@ const addTopic = async (req, res) => {
     const teacherId = req.session.loggedInUser.id;
 
     const { title, description, keywords, slots, education_level, specialization_ids } = req.body;
+    sanitizeHtml(title);
+    sanitizeHtml(description);
+    sanitizeHtml(keywords);
 
     const topic = await Topic.create({
       title: title,
@@ -153,6 +158,9 @@ const editTopic = async (req, res) => {
     const topicId = req.params.id;
 
     const { title, description, keywords, slots, education_level } = req.body;
+    sanitizeHtml(title);
+    sanitizeHtml(description);
+    sanitizeHtml(keywords);
 
     const topic = await Topic.findByPk(topicId);
 

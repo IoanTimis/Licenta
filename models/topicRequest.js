@@ -52,7 +52,7 @@ const topicRequest = sequelize.define('topic_requests', {
   },
   updatedAt: {
     type: DataTypes.DATE,
-    defaultValue: DataTypes
+    defaultValue: DataTypes.NOW
  }
 });
 

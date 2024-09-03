@@ -15,22 +15,27 @@
         <p>Tip: <%= topic.education_level %></p>
         <p>Profesor: <%= topic.user.name %></p>
         <p>Email profesor: <%= topic.user.email %></p>
-
-        <button type="button" class="btn btn-primary applyBtn" data-bs-toggle="modal" data-bs-target="#reqMessageModal">
-            Aplica
-        </button>        
+        <% if (!requested) { %>
+            <button type="button" class="btn btn-primary applyBtn" data-bs-toggle="modal" data-bs-target="#reqMessageModal">
+                Aplica
+            </button>
+        <% } else { %>
+            <h2>Ai aplicat deja pt acest topic</h2>
+        <% } %>    
     </main>
 
     <div class="modal fade" id="reqMessageModal" tabindex="-1" aria-labelledby="reqMessageModalLabel" aria="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="reqMessageModalLabel"></h1>
+                    <h1 class="modal-title fs-5" id="reqMessageModalLabel">Aplicare la o tema</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <h6 id="modalMsg"></h6>
-                    <form action="" method="" id="reqMessageForm">
+                    <form action="/student/new/request" method="post" id="reqTopicForm">
+                        <input type="hidden" value="<%=topic.id%>" name="topic_id">
+                        <input type="hidden" value="<%=topic.user.id%>" name="teacher_id">
                         <div class="mb-3">
                             <label for="message" class="form-label">Mesaj</label>
                             <textarea class="form-control"  name="message" rows="3"></textarea>
