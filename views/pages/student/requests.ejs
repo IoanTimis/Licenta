@@ -32,7 +32,8 @@
                                     <p class="card-text">Răspuns de la profesor: <%= truncateText(request.teacher_message, 40) %></p>
                                 <% } else { %>
                                     <p class="card-text">Răspuns de la profesor: Nu a fost primit niciun răspuns.</p>
-                                <% } %>                                
+                                <% } %>
+                                <p>Status: <%= request.status %></p>                                
                             </div>
                         </div>
                     </a>

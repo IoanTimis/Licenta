@@ -16,19 +16,22 @@
                                 <img src="" class="card-img-top" alt="">
                                 <div class="card-body">
                                     <h5 class="card-title">Student: <%= studentRequest.student.name %></h5>
+                                    <p class="card-text">Topic cerut: <%= studentRequest.topic.title %> </p>
                                     <p class="card-text">Email: <%= studentRequest.student.email %></p>
-                                    <p class="card-text">Message: <%= studentRequest.message %></p>                          
+                                    <p class="card-text">Mesaj de la student: <%= truncateText(studentRequest.student_message,40) %></p>
+                                    <% if(studentRequest.teacher_message) { %>
+                                        <p class="card-text">Raspunsul tau: <%= truncateText(studentRequest.teacher_message,40) %></p>
+                                    <% } %>
+                                    <p class="card-text">Status: <%= studentRequest.status %></p>                          
                                 </div>
                             </div>
-                        </a>
+                        
                         <div class="card-footer d-flex justify-content-between">
-                            <button type="button" class="btn btn-primary acceptBtn" data-id="<%= studentRequest.id %>">
-                                Accepta
+                            <button type="button" class="btn detailsBtn" data-id="<%= studentRequest.id %>">
+                                Detalii
                             </button> 
-                            <button type="button" class="btn btn-danger rejectBtn" data-id="<%= studentRequest.id %>">
-                                Respinge
-                            </button>
                         </div>
+                    </a>
                     </div>
                 <% }); %>
             </div>

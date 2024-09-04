@@ -102,7 +102,11 @@ const getSpecializations = async (req, res) => {
   const faculty_id = req.params.id;
   
   try {
-      const specializations = await Specialization.findAll({ where: { faculty_id: faculty_id } });
+      const specializations = await Specialization.findAll({
+          where: {
+              faculty_id: faculty_id
+          }
+      });
       res.json(specializations);
   } catch (error) {
       console.error('Error fetching specializations:', error);
@@ -209,30 +213,22 @@ const studentRequests = async (req, res) => {
   try{
     const teacherId = req.session.loggedInUser.id;
 
-    const teacher = await User.findByPk(teacherId);
-
-    if (!teacher) {
-      return res.status(404).send('Teacher not found');
-    }
-
     const requests = await topicRequest.findAll({
-      where: { teacher_id: teacherId }
+      where: {
+        teacher_id: teacherId
+      },
+      include: [{
+          model: User,
+          as: 'student',
+        },
+        {
+          model: Topic,
+          as: 'topic'
+        }
+      ]
     });
 
-    if (!requests) {
-      return res.status(404).send('Requests not found');
-    }
-
-   for(const request of requests){
-      const student = await User.findByPk(request.student_id);
-      if (!student) {
-        return res.status(404).send('Student not found');
-      }
-
-      request.student = student;
-    }
-
-    res.render('pages/teacher/studentRequests', { studentRequests: requests});
+    res.render('pages/teacher/studentRequests', { studentRequests: requests, truncateText: truncateText });
   }
   catch (error) {
     console.error('Error getting requests:', error);
@@ -244,24 +240,66 @@ const studentRequest = async (req, res) => {
   try{
     const requestId = req.params.id;
 
-    const request = await topicRequest.findByPk(requestId);
+    const request = await topicRequest.findByPk(requestId,
+      {
+        include: [{
+            model: User,
+            as: 'student',
+          },
+          {
+            model: Topic,
+            as: 'topic'
+          }
+        ]
+      }
+    );
 
     if (!request) {
       return res.status(404).send('Request not found');
     }
 
-    const student = await User.findByPk(request.student_id);
-
-    if (!student) {
-      return res.status(404).send('Student not found');
-    }
-
-    request.student = student;
-
     res.render('pages/teacher/studentRequest', { studentRequest: request });
   }
   catch (error) {
     console.error('Error getting request:', error);
+    res.status(500).send('Internal Server Error');
+  }
+}
+
+const teacherResponse = async (req, res) => {
+  try{
+    const requestId = req.params.id;
+    const { status, message } = req.body;
+    sanitizeHtml(message);
+    console.log(status, message);
+
+    const request = await topicRequest.findByPk(requestId,{
+      include: {
+        model: Topic,
+        as: 'topic'
+      }
+    });
+
+    if (!request) {
+      return res.status(404).json({ message: 'Request not found' });
+    }
+
+    request.status = status;
+    request.teacher_message = message;
+    await request.save();
+
+    if(status === 'accepted'){
+      console.log("slots----------------------------------------------------------------");
+      console.log(request.topic.slots);
+      request.topic.slots = request.topic.slots - 1;
+      await request.topic.save();
+      console.log(request.topic.slots);
+    }
+
+    res.json({ status: 'success' });
+  }
+  catch (error) {
+    console.error('Error responding to request:', error);
     res.status(500).send('Internal Server Error');
   }
 }
@@ -279,5 +317,6 @@ module.exports = {
   editTopic,
   deleteTopic,
   studentRequests,
-  studentRequest
+  studentRequest,
+  teacherResponse
 };

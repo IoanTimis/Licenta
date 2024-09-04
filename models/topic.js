@@ -24,6 +24,7 @@ const Topic = sequelize.define('topics', {
   education_level: {
     type: DataTypes.ENUM('bsc', 'msc'),
     allowNull: false,
+    defaultValue: 'bsc',
   },
   slots: {
     type: DataTypes.INTEGER,

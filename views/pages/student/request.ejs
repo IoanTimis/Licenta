@@ -17,7 +17,12 @@
         <p>Profesor: <%= request.teacher.name %></p>
         <p>Email profesor: <%= request.teacher.email %></p>
         <p>Mesaj catre profesor: <%= request.student_message %></p>
-        <p>Raspuns: <%= request.teacher_message %></p>
+        <% if (request.teacher_message) { %>
+            <p>Raspuns de la profesor: <%= request.teacher_message %></p>
+        <% } else { %>
+            <p>Raspuns de la profesor: Nu a fost primit niciun raspuns.</p>
+        <% } %>
+        <p>Status: <%= request.status %></p>
         <button type="button" class="btn btn-danger deleteBtn" data-id="<%= request.id %>">
             Sterge
         </button>

@@ -49,6 +49,7 @@ const topic = require('./models/topic');
 const specialization = require('./models/specialization');
 const specializationTopic = require('./models/specializationTopic');
 
+
 sequelize.sync({ force: false, logging: console.log })
   .then(() => {
     console.log('Database & tables created!');
@@ -56,6 +57,8 @@ sequelize.sync({ force: false, logging: console.log })
   .catch(error => {
     console.error('Error creating database:', error);
   });
+
+
 
 
 

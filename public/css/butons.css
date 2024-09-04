@@ -1,4 +1,4 @@
- .addBtn{
+.addBtn{
     background-color: black;
     color: white;
     margin-right: 10px;
@@ -83,7 +83,6 @@
     border: none;
     margin-right: 10px;
     cursor: pointer;
-    width: 100%;
 }
 
 .acceptBtn:hover {
@@ -97,7 +96,6 @@
     margin-left: 10px;
     border: none;
     cursor: pointer;
-    width: 100%;
 }
 
 .rejectBtn:hover {
@@ -114,6 +112,19 @@
 }
 
 .applyBtn:hover {
+    opacity: 0.8;
+    background-color: green;
+}
+
+.detailsBtn{
+    background-color: black;
+    color: white;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+.detailsBtn:hover {
     opacity: 0.8;
     background-color: green;
 }
