@@ -4,6 +4,7 @@ const User = require('../models/user');
 const Faculty = require('../models/faculty');
 const Specialization = require('../models/specialization');
 const { query } = require('express');
+const { deleteTopic } = require('./teacher');
 
 const getSpecializations = async (req, res) => {
   const faculty_id = req.params.id;
@@ -86,6 +87,7 @@ const registerTeacherPost = async (req, res) => {
 
 const login = (req, res, next) => {
   if (req.session.loggedInUser) {
+    console.log("esti logat deja:",req.session.loggedInUser);
     return res.redirect('/');
   }else{
     res.render('pages/auth/login');
@@ -134,7 +136,13 @@ const loginPost = async (req, res, next) => {
 
 const logout = (req, res) => {
   delete req.session.loggedInUser;
-  res.redirect('/');
+  req.session.save(function(err) {
+    if (err) {
+      console.error('Eroare la salvarea sesiunii:', err);
+    } else {
+      res.redirect('/');
+    }
+  });
 };
   
 

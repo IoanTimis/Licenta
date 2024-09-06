@@ -6,6 +6,7 @@ const Faculty = require('../models/faculty');
 const Specialization = require('../models/specialization');
 const specializationTopic = require('../models/specializationTopic');
 const sanitizeHtml = require('sanitize-html');
+const session = require('express-session');
 
 
 const home = (req, res) => {
@@ -18,31 +19,44 @@ const about = (req, res) => {
 
 const logout = (req, res) => {
   delete req.session.loggedInUser;
-  res.redirect('/');
+  req.session.save(function(err) {
+    if (err) {
+      console.error('Eroare la salvarea sesiunii:', err);
+    } else {
+      res.redirect('/');
+    }
+  });
 };
 
 const teacherTopics = async (req, res) => {
   try{
     const teacherId = req.session.loggedInUser.id;
 
-    const faculties = await Faculty.findAll();
-
-    if (!faculties) {
-      return res.status(404).send('Faculties not found');
-    }
+    const faculty = await Faculty.findAll({});
 
     const teacher = await User.findByPk(teacherId, {
-      include: {
-        model: Topic,
-        as: 'topics'
-      }
+      include: [
+        {
+          model: Topic,
+          as: 'topics',
+          include: [{
+            model: Specialization,
+            as: 'specializations',
+            include: {
+              model: Faculty,
+              as: 'faculty',
+              attributes: ['img_url']
+            }
+          }]
+        }
+      ]
     });
-  
+    
     if (!teacher) {
       return res.status(404).send('Teacher not found' );
     }
 
-    res.render('pages/teacher/topics', { user: teacher, faculties: faculties, truncateText: truncateText });
+    res.render('pages/teacher/topics', { user: teacher, faculties: faculty, truncateText: truncateText });
   }
   catch (error) {
     console.error('Error getting topics:', error);
@@ -220,6 +234,11 @@ const studentRequests = async (req, res) => {
       include: [{
           model: User,
           as: 'student',
+          include: {
+            model: Faculty,
+            as: 'faculty',
+            attributes: ['img_url']
+          }
         },
         {
           model: Topic,

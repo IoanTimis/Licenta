@@ -25,13 +25,12 @@ app.use(session({ secret: process.env.SESSION_SECRET,
 
 app.use((req, res, next) => {
   if (req.session.loggedInUser) {
-    res.locals.user = req.session.loggedInUser.specialization;
+    res.locals.loggedInUser = req.session.loggedInUser;
   } else {
-    res.locals.user = null;
+    res.locals.loggedInUser = null;
   }
   next();
 });
-
 
 const bcrypt = require('bcryptjs');
 

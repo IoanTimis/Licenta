@@ -15,6 +15,10 @@ const Faculty = sequelize.define('faculties', {
     type: DataTypes.TEXT,
     allowNull: true,
   },
+  img_url: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
   createdAt: {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW,

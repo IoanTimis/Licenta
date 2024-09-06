@@ -18,7 +18,13 @@ const about = (req, res) => {
 
 const logout = (req, res) => {
   delete req.session.loggedInUser;
-  res.redirect('/');
+  req.session.save(function(err) {
+    if (err) {
+      console.error('Eroare la salvarea sesiunii:', err);
+    } else {
+      res.redirect('/');
+    }
+  });
 };
 
 const getStudentTopics = async (req, res) => {
@@ -30,7 +36,11 @@ const getStudentTopics = async (req, res) => {
     if (!specialization) {
       return res.status(404).json({ message: 'Specialization not found' });
       }
-      //Posibil sa fie nevoie de modificari pt a nu afisa ce topicurile de masterat sau licenta in functie de nivelul de studii
+      
+      const faculty = await specialization.getFaculty({
+        attributes: ['img_url']
+      });      
+
     const topics = await specialization.getTopics({
       where: {
         education_level: education_level,
@@ -48,7 +58,7 @@ const getStudentTopics = async (req, res) => {
       return res.status(404).json({ message: 'Topics not found' });
     };
 
-   return res.render('pages/student/topics', { topics: topics, truncateText: truncateText });
+   return res.render('pages/student/topics', { topics: topics, logo: faculty,truncateText: truncateText });
 
   }
   catch (error) {
@@ -95,6 +105,18 @@ const topicPage = async (req, res) => {
 const getRequestTopics = async (req, res) => {
   try {
     const student_id = req.session.loggedInUser.id;
+    const specialization_id = req.session.loggedInUser.specialization_id;
+
+    const specialization = await Specialization.findByPk(specialization_id);
+
+    if (!specialization) {
+      return res.status(404).json({ message: 'Specialization not found' });
+    }
+
+    const faculty = await specialization.getFaculty({
+      attributes: ['img_url']
+    });
+    
 
     const requests = await topicRequest.findAll({
       where: {
@@ -117,7 +139,7 @@ const getRequestTopics = async (req, res) => {
       delete req.session.loggedInUser;
       res.redirect('/');
     };
-    return res.render('pages/student/requests', { requests: requests, truncateText: truncateText });
+    return res.render('pages/student/requests', { requests: requests, logo: faculty, truncateText: truncateText });
   }
   catch (error) {
     console.error('Error getting requests:', error);

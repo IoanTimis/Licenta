@@ -54,7 +54,7 @@
                         <div class="col" data-keywords="<%= topic.keywords %>" data-teacher="<%= topic.user.name %>">
                             <a href="/student/topic/<%= topic.id %>" class="text-decoration-none text-dark">
                             <div class="card">
-                                <img src="" class="card-img-top" alt="">
+                                <img src="<%= logo.img_url %>" class="card-img-top" alt="">
                                 <div class="card-body">
                                     <h5 class="card-title">Titlu: <%= topic.title %></h5>
                                     <p>Descriere: <%= truncateText(topic.description, 40) %></p>

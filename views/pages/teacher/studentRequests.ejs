@@ -23,7 +23,7 @@
                     <div class="col" data-status="<%=studentRequest.status%>">
                         <a href="/teacher/student-request/<%=studentRequest.id%>" class="text-decoration-none text-dark">
                             <div class="card">
-                                <img src="" class="card-img-top" alt="">
+                                <img src="<%= studentRequest.student.faculty.img_url %>" class="card-img-top" alt="">
                                 <div class="card-body">
                                     <h5 class="card-title">Student: <%= studentRequest.student.name %></h5>
                                     <p class="card-text">Topic cerut: <%= studentRequest.topic.title %> </p>
