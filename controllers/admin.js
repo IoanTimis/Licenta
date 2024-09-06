@@ -1,11 +1,15 @@
 const Topic  = require('../models/topic');
 
 const home = (req, res) => {
-  res.render('pages/admin/index');
+  res.render('pages/admin/generalPages/index');
 };
 
 const about = (req, res) => {
-  res.render('pages/admin/about');
+  res.render('pages/admin/generalPages/about');
+};
+
+const dashboard = (req, res) => {
+  res.render('pages/admin/dashboard');
 };
 
 
@@ -13,5 +17,6 @@ const about = (req, res) => {
 
 module.exports = {
   home,
-  about
+  about,
+  dashboard
 };

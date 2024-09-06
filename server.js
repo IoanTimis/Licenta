@@ -59,14 +59,6 @@ sequelize.sync({ force: false, logging: console.log })
   });
 
 
-
-
-
-app.listen(3000, () => {
-  console.log('Server is running on port 3000');
-});
-
-
 const adminRoutes = require('./routes/admin');
 app.use('/admin', adminRoutes);
 
@@ -84,5 +76,5 @@ app.use('/', generalRoutes);
 
 
 app.listen(8080, () => {
-  console.log('Server is running on port 3000');
+  console.log('Server is running on port 8080');
 });

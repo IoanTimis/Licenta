@@ -1,0 +1,35 @@
+/* Style for the sidebar */
+.sidebar {
+  height: 100vh; /* Full-height */
+  position: fixed; /* Fixed Sidebar */
+  top: 0;
+  left: 0;
+  width: 250px; /* Sidebar width */
+  background-color: #343a40; /* Dark background */
+  padding-top: 20px;
+}
+
+.sidebar a {
+  padding: 15px;
+  text-align: left;
+  text-decoration: none;
+  font-size: 18px;
+  color: #f8f9fa;
+  display: block;
+}
+
+.sidebar a:hover {
+  background-color: #495057; /* Darker background on hover */
+}
+
+/* Main content area */
+.main-content {
+  margin-left: 250px; /* Same width as the sidebar */
+  padding: 20px;
+}
+
+header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}

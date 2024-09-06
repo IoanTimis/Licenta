@@ -34,3 +34,8 @@ main {
 .hidden {
   display: none;
 }
+
+.filterDiv {
+  padding: 1rem;
+  border: 1px solid #ccc;
+}

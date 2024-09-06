@@ -1,16 +1,26 @@
 <html lang="en">
 <head>
     <%- include('../../partials/head') %>
+    <script src="/js/searchFilter.js"></script>
 </head>
 <body class="container">
     <header>
         <%- include('../../partials/teacherHeader') %>
     </header>
     <main class="flex-grow-1">
+        <div class="filterDiv">
+        <select class="form-select" aria-label="Default select example" id="reqFilter">
+            <option selected>Filtreaza cererile dupa</option>
+            <option value="pending">Fara raspuns</option>
+            <option value="accepted">Acceptate</option>
+            <option value="rejected">Respinse</option>
+            <option value="all">Toate</option>
+          </select>
+        </div>
         <div class="container requestsContainer">
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
                 <% studentRequests.forEach(function(studentRequest) { %>
-                    <div class="col">
+                    <div class="col" data-status="<%=studentRequest.status%>">
                         <a href="/teacher/student-request/<%=studentRequest.id%>" class="text-decoration-none text-dark">
                             <div class="card">
                                 <img src="" class="card-img-top" alt="">
