@@ -1,4 +1,11 @@
+const User = require('../models/user');
+const Faculty = require('../models/faculty');
+const Specialization = require('../models/specialization');
 const Topic  = require('../models/topic');
+const SpecializationTopic = require('../models/specializationTopic');
+const TopicRequest = require('../models/topicRequest');
+const { Op } = require('sequelize');
+
 //geralPages
 const home = (req, res) => {
   res.render('pages/admin/generalPages/index');
@@ -14,7 +21,9 @@ const dashboard = (req, res) => {
 };
 
 const getFaculty = (req, res) => {
-  res.render('pages/admin/faculty');
+  const faculties = Faculty.findAll({});
+  
+  res.render('pages/admin/faculties');
 };
 
 

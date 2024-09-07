@@ -117,7 +117,6 @@ const getRequestTopics = async (req, res) => {
       attributes: ['img_url']
     });
     
-
     const requests = await topicRequest.findAll({
       where: {
         student_id: student_id
@@ -201,11 +200,16 @@ const newRequest = async (req, res) => {
 
 const deleteRequest = async (req, res) => {
   try {
+    const student_id = req.session.loggedInUser.id;
     const request_id = req.params.id;
     
     const request = await topicRequest.findByPk(request_id);
     if (!request) {
       return res.status(404).json({ message: 'Request not found' });
+    }
+
+    if (request.student_id !== student_id) {
+      return res.status(403).json({ message: 'Forbidden' });
     }
 
     await request.destroy();

@@ -6,6 +6,7 @@
 <body class="container">
     <header>
         <%- include('../../partials/teacherHeader') %>
+        <script src="/js/student-teacherReq.js"></script>
     </header>
     <main class="flex-grow-1">
         <div class="filterDiv">
@@ -35,13 +36,12 @@
                                     <p class="card-text">Status: <%= studentRequest.status %></p>                          
                                 </div>
                             </div>
-                        
+                        </a>
                         <div class="card-footer d-flex justify-content-between">
-                            <button type="button" class="btn detailsBtn" data-id="<%= studentRequest.id %>">
-                                Detalii
+                            <button type="button" class="btn btn-danger deleteBtnCard" data-id="<%= studentRequest.id %>">
+                                Sterge
                             </button> 
                         </div>
-                    </a>
                     </div>
                 <% }); %>
             </div>

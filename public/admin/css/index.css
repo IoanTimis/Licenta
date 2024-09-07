@@ -33,3 +33,37 @@ header {
   top: 0;
   z-index: 1000;
 }
+
+.header-item{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #343a40;
+}
+
+.header-item a {
+  color: #f8f9fa;
+  text-decoration: none;
+  padding: 1rem;
+}
+
+.header-item a:hover {
+  background-color: #495057;
+}
+
+.header-item button {
+  background-color: #343a40;
+  color: #f8f9fa;
+  border: none;
+  padding: 1rem;
+  cursor: pointer;
+}
+
+.header-item button:hover {
+  background-color: #495057;
+}
+
+
+

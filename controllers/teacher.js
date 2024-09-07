@@ -172,9 +172,11 @@ const addTopic = async (req, res) => {
 };
 
 const editTopic = async (req, res) => {
+  
   try{
     const topicId = req.params.id;
-
+    const user = req.session.loggedInUser;
+  
     const { title, description, keywords, slots, education_level } = req.body;
     sanitizeHtml(title);
     sanitizeHtml(description);
@@ -184,6 +186,10 @@ const editTopic = async (req, res) => {
 
     if (!topic) {
       return res.status(404).json({ message: 'Topic not found' });
+    }
+
+    if(user !== null && user.id !== topic.user_id){
+      return res.status(403).send('Forbidden');
     }
 
     topic.title = title;
@@ -205,11 +211,16 @@ const editTopic = async (req, res) => {
 const deleteTopic = async (req, res) => {
   try{
     const topicId = req.params.id;
-
+    const user = req.session.loggedInUser;
+  
     const topic = await Topic.findByPk(topicId);
 
     if (!topic) {
       return res.status(404).json({ message: 'Topic not found' });
+    }
+
+    if(user !== null && user.id !== topic.user_id){
+      return res.status(403).send('Forbidden');
     }
 
     await topic.destroy();
@@ -287,6 +298,7 @@ const studentRequest = async (req, res) => {
 
 const teacherResponse = async (req, res) => {
   try{
+    const teacherId = req.session.loggedInUser.id;
     const requestId = req.params.id;
     const { status, message } = req.body;
     sanitizeHtml(message);
@@ -301,6 +313,10 @@ const teacherResponse = async (req, res) => {
 
     if (!request) {
       return res.status(404).json({ message: 'Request not found' });
+    }
+
+    if(request.teacher_id !== teacherId){
+      return res.status(403).send('Forbidden');
     }
 
     request.status = status;
@@ -323,6 +339,31 @@ const teacherResponse = async (req, res) => {
   }
 }
 
+const deleteRequest = async (req, res) => {
+  try{
+    const requestId = req.params.id;
+    const user = req.session.loggedInUser;
+  
+    const request = await topicRequest.findByPk(requestId);
+
+    if (!request) {
+      return res.status(404).json({ message: 'Request not found' });
+    }
+
+    if(user !== null && user.id !== request.teacher_id){
+      return res.status(403).send('Forbidden');
+    }
+
+    await request.destroy();
+
+    res.json({ message: 'Request deleted' });
+  }
+  catch (error) {
+    console.error('Error deleting request:', error);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
 
 module.exports = {
   home,
@@ -337,5 +378,6 @@ module.exports = {
   deleteTopic,
   studentRequests,
   studentRequest,
-  teacherResponse
+  teacherResponse,
+  deleteRequest
 };

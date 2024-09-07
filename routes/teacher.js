@@ -23,6 +23,7 @@ router.delete('/topic/delete/:id', teacherController.deleteTopic);
 router.get('/student-requests', teacherController.studentRequests);
 router.get('/student-request/:id', teacherController.studentRequest);
 router.put('/student-request/response/:id', teacherController.teacherResponse);
+router.delete('/delete/request/:id', teacherController.deleteRequest);
 
 
 

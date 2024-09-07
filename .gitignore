@@ -9,3 +9,7 @@ node_modules
 
 # Ignore sessions folder
 sessions
+
+#debugg files
+.vscode/launch.json
+

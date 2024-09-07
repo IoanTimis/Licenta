@@ -39,4 +39,24 @@ $(document).ready(function(){
     $('#resMessageModal').modal('show');
   });
 
+  $('.row').on('click','.deleteBtnCard' ,function(){
+    var id = $(this).data('id');
+    var url = '/teacher/delete/request/' + id;
+    var card = $(this).closest('.col');
+    const confirmDelete = confirm('Ești sigur că vrei să ștergi acest obiect?');
+
+    if (confirmDelete) {
+      $.ajax({
+        url: url,
+        type: 'DELETE',
+        success: function(result){
+          card.remove();
+        },
+        error: function(err){
+          console.log(err);
+        }
+      });
+    }
+  });
+
 });
