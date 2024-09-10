@@ -8,17 +8,17 @@
   <div class="sidebar">
     <a href="/admin/dashboard">Acasa</a>
     <a href="/admin/faculties">Gestioneaza facultatile</a>
-    <a href="#">Gestioneaza specializarile</a>
-    <a href="#">Gestioneaza utilizatorii</a>
-    <a href="#">Gestioneaza temele</a>
-    <a href="#">gestioneaza specializari-teme</a>
-    <a href="#">gestioneaza cereri teme</a>
+    <a href="/admin/specializations">Gestioneaza specializarile</a>
+    <a href="/admin/users">Gestioneaza utilizatorii</a>
+    <a href="/admin/topics">Gestioneaza temele</a>
+    <a href="/admin/specialization-topics">gestioneaza specializari-teme</a>
+    <a href="/admin/topic-requests">gestioneaza cereri teme</a>
   </div>
 
   <div class="main-content">
     <header class="bg-light p-3 shadow-sm">
       <li class="header-item">
-        <button class="btn btn-primary addBtn">Adauga facultate</button>
+        <button class="btn btn-primary addBtn">Adauga specializare</button>
       </li>
     </header>
     
@@ -27,9 +27,9 @@
           <thead>
             <tr>
               <th>ID</th>
-              <th>Nume Facultate</th>
+              <th>Nume specializare</th>
               <th>Descriere</th>
-              <th>Url imagine</th>
+              <th>Nume facultate</th>
               <th>Data creării</th>
               <th>Data modificării</th>
               <th>Acțiuni</th>
@@ -42,7 +42,7 @@
                 <td><span><%= specialization.id %></span></td>
                 <td><span><%= specialization.name %></span></td>
                 <td><span><%= specialization.description %></span></td>
-                <td><span><%= specialization.img_url %></span></td>
+                <td><span><%= specialization.faculty.name %></span></td>
                 <td><span><%= new Date(specialization.createdAT).toLocaleString() %></span></td>
                 <td><span><%= new Date(specialization.updatedAT).toLocaleString() %></span></td>
                 <td>
@@ -75,8 +75,12 @@
                         <textarea class="form-control"  name="description" rows="3"></textarea>
                     </div>
                     <div class="mb-3">
-                        <label for="img_url" class="form-label">Url imagine</label>
-                        <input type="text" class="form-control"  name="img_url">
+                      <label for="faculty_id" class="form-label">Alege facultatea</label>
+                      <select class="form-select" name="faculty_id" aria-label="faculty_id">
+                        <% faculties.forEach(faculty => { %>
+                          <option value="<%= faculty.id %>"><%= faculty.name %></option>
+                        <% }); %>
+                      </select>
                     </div>
 
                     <div class="modal-footer">

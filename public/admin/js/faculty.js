@@ -81,7 +81,6 @@ $(document).ready(function(){
 
   $('.table tbody').on('click', '.btn-danger', function(){
     var id = $(this).data('id');
-    var url = '/admin/faculty/delete/' + id;
     var tr = $(this).closest('tr');
     const confirm = window.confirm('Esti sigur ca vrei sa stergi aceasta facultate?');
 
@@ -90,7 +89,7 @@ $(document).ready(function(){
     }
 
     $.ajax({
-      url: url,
+      url: '/admin/faculty/delete/' + id,
       type: 'DELETE',
       success: function(response){
         tr.remove();

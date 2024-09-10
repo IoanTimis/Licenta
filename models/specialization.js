@@ -35,6 +35,6 @@ const Specialization = sequelize.define('specializations', {
 });
 
 Faculty.hasMany(Specialization, { foreignKey: 'faculty_id', onDelete : 'CASCADE' });
-Specialization.belongsTo(Faculty, { foreignKey: 'faculty_id' });
+Specialization.belongsTo(Faculty, { as: 'faculty', foreignKey: 'faculty_id' });
 
 module.exports = Specialization;
