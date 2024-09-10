@@ -14,7 +14,11 @@ router.get('/about', adminController.about);
 
 //Dashboard Pages
 router.get('/dashboard', adminController.dashboard);
-router.get('/faculties', adminController.getFaculty);
+router.get('/faculties', adminController.getFaculties);
+router.get('/faculty/get/:id', adminController.getFaculty);
+router.post('/faculty/add', adminController.addFaculty);
+router.put('/faculty/update/:id', adminController.updateFaculty);
+router.delete('/faculty/delete/:id', adminController.deleteFaculty);
 
 
 module.exports = router;

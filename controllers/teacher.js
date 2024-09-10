@@ -103,6 +103,7 @@ const apiTeacherTopic = async (req, res) => {
     if (!topic) {
       return res.status(404).json({ message: 'Topic not found' });
     }
+    var id = $(this).data('id');
 
     return res.json(topic);
   }

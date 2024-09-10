@@ -1,7 +1,7 @@
 <html lang="en">
 <head>
   <%- include('../../partials/admin/head') %>
-  <script src="/admin/js/faculty.js"></script>
+  <script src="/admin/js/specialization.js"></script>
 </head>
 <body>
 
@@ -37,17 +37,17 @@
           </thead>
           <tbody>
             
-            <% faculties.forEach(faculty => { %>
-              <tr data-id="<%= faculty.id %>">
-                <td><span><%= faculty.id %></span></td>
-                <td><span><%= faculty.name %></span></td>
-                <td><span><%= faculty.description %></span></td>
-                <td><span><%= faculty.img_url %></span></td>
-                <td><span><%= new Date(faculty.createdAT).toLocaleString() %></span></td>
-                <td><span><%= new Date(faculty.updatedAT).toLocaleString() %></span></td>
+            <% specializations.forEach(specialization => { %>
+              <tr data-id="<%= specialization.id %>">
+                <td><span><%= specialization.id %></span></td>
+                <td><span><%= specialization.name %></span></td>
+                <td><span><%= specialization.description %></span></td>
+                <td><span><%= specialization.img_url %></span></td>
+                <td><span><%= new Date(specialization.createdAT).toLocaleString() %></span></td>
+                <td><span><%= new Date(specialization.updatedAT).toLocaleString() %></span></td>
                 <td>
-                  <button class="btn btn-info" data-id="<%= faculty.id %>">Editare</button>
-                  <button class="btn btn-danger" data-id="<%= faculty.id %>">Ștergere</button>
+                  <button class="btn btn-info" data-id="<%= specialization.id %>">Editare</button>
+                  <button class="btn btn-danger" data-id="<%= specialization.id %>">Ștergere</button>
                 </td>
               </tr>
             <% }); %>
