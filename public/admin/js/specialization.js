@@ -58,7 +58,6 @@ $(document).ready(function(){
     let id = $(this).data('id');
     let tr = $(this).closest('tr');
 
-
     $.ajax({
       url: `specialization/delete/${id}`,
       method: 'DELETE',
@@ -89,8 +88,4 @@ $(document).ready(function(){
       modal.modal('show')
     }
   }
-
-
-
-
 });

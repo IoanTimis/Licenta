@@ -5,6 +5,8 @@ const Topic  = require('../models/topic');
 const SpecializationTopic = require('../models/specializationTopic');
 const TopicRequest = require('../models/topicRequest');
 const { Op } = require('sequelize');
+const { response } = require('express');
+const bcrypt = require('bcryptjs');
 
 //geralPages
 const home = (req, res) => {
@@ -20,6 +22,7 @@ const dashboard = (req, res) => {
   res.render('pages/admin/dashboard');
 };
 
+//Faculties---------------------------------------------------------------------------------------------------
 const getFaculties = async (req, res) => {
   try {
     const faculties = await Faculty.findAll({});
@@ -46,7 +49,7 @@ const getFaculty = async (req, res) => {
     }
 
     res.json(faculty);
-  } catch (error) {
+  } catch (error) {api/specializations
     console.error(error);
     res.status(500).send('Server error');
   }
@@ -114,6 +117,7 @@ const deleteFaculty = async (req, res) => {
   }
 };
 
+//Specializations---------------------------------------------------------------------------------------------------
 const getSpecializations = async (req, res) => {
 
   try {
@@ -155,6 +159,23 @@ const getSpecialization = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).send('Server error');
+  }
+};
+
+const getFacultySpecializations = async (req, res) => {
+  const id = req.params.id;
+
+  try{
+    const specializations = await Specialization.findAll({ where: { faculty_id: id } });
+
+    if (specializations.length === 0) {
+      return res.status(404).send("Specializations not found");
+    }    
+
+    res.json(specializations);
+  }catch(error){
+    console.error(error);
+    res.status(500).send('Server error')
   }
 };
 
@@ -235,25 +256,133 @@ const deleteSpecialization = async (req, res) => {
   }
 };
 
+//Users---------------------------------------------------------------------------------------------------
+const getUsers = async (req, res) => {
+  try{
+    const users = await User.findAll();
+    const faculties = await Faculty.findAll();
 
+    if(!users){
+      return res.status(404).send('User not found');
+    }
+
+    res.render('pages/admin/users', {users : users, faculties: faculties})
+  }catch(error){
+    console.error(error);
+    res.status(500).send('Server error')
+  };
+
+};
+
+const getUser = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const user = await User.findByPk(id);
+
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+
+    if(user.type === 'student'){
+      const faculty = await user.getFaculty();
+
+      if (!faculty) {
+        return res.status(404).send('Faculty not found');
+      }
+
+      const specialization = await user.getSpecialization();
+
+      if (!specialization) {
+        return res.status(404).send('Specialization not found');
+      }
+
+      const response = {
+        ...user.toJSON(), 
+        facultyId: faculty.id, 
+        facultyName: faculty.name, 
+        specializationId: specialization.id, 
+        specializationName: specialization.name, 
+      };
+
+      return res.json(response);
+    }
+
+    res.json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server error');
+  }
+};
+
+const editUser = async (req, res) => {
+  const id = req.params.id;
+  const { name, first_name, email, password, title, education_level, faculty_id, specialization_id } = req.body;
+
+  try {
+    const user = await User.findByPk(id);
+
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+
+    user.name = name;
+    user.first_name = first_name;
+    user.email = email;
+    if (password && password.trim()) {
+      const hashedPassword = await bcrypt.hash(password, 10); // Hashing parola dacă a fost trimisă
+      user.password = hashedPassword;
+    }
+    user.title = title;
+    user.education_level = education_level;
+    user.faculty_id = faculty_id;
+    user.specialization_id = specialization_id;
+
+    // Salvăm modificările
+    await user.save();
+
+    res.json(user);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Server error');
+  }
+};
+
+
+const deleteUser = async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const user = await User.destroy({
+      where:{
+        id: id
+      }
+    });
+
+    res.json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server error');
+  }
+};
 
 module.exports = {
   home,
   about,
-
   dashboard,
-
   getFaculties,
   getFaculty,
   addFaculty,
   updateFaculty,
   deleteFaculty,
-
   getSpecializations,
+  getFacultySpecializations,
   getSpecialization,
   addSpecialization,
   editSpecialization,
   deleteSpecialization,
-
-
+  getUsers,
+  getUser,
+  editUser,
+  deleteUser
 };

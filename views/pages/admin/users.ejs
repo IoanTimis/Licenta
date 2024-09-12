@@ -1,0 +1,119 @@
+<html lang="en">
+<head>
+  <%- include('../../partials/admin/head') %>
+  <script src="/admin/js/user.js"></script>
+</head>
+<body>
+
+  <div class="sidebar">
+    <a href="/admin/dashboard">Acasa</a>
+    <a href="/admin/faculties">Gestioneaza facultatile</a>
+    <a href="/admin/specializations">Gestioneaza specializarile</a>
+    <a href="/admin/users">Gestioneaza utilizatorii</a>
+    <a href="/logout">Logout</a>
+  </div>
+
+  <div class="main-content">
+    <header class="bg-light p-3 shadow-sm">
+      <li class="header-item"></li>
+    </header>
+    
+    <div class="container mt-3">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nume</th>
+              <th>Prenume</th>
+              <th>email</th>
+              <th>Data creării</th>
+              <th>Data modificării</th>
+              <th>Acțiuni</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <% users.forEach(user => { %>
+              <tr data-id="<%= user.id %>">
+                <td><span><%= user.id %></span></td>
+                <td><span><%= user.name %></span></td>
+                <td><span><%= user.first_name %></span></td>
+                <td><span><%= user.email %></span></td>
+                <td><span><%= new Date(user.createdAT).toLocaleString() %></span></td>
+                <td><span><%= new Date(user.updatedAT).toLocaleString() %></span></td>
+                <td>
+                  <button class="btn btn-info" data-id="<%= user.id %>">Editare</button>
+                  <button class="btn btn-danger" data-id="<%= user.id %>">Ștergere</button>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>        
+    </div>
+  </div>
+
+  <div class="modal fade" id="Modal" tabindex="-1" aria-labelledby="ModalLabel" aria="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="ModalLabel">Editeaza utilizator</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h6 id="modalMsg"></h6>
+                <form action="" method="PUT" id="Form">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Nume</label>
+                        <input type="text" class="form-control"  name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="first_name" class="form-label">Prenume</label>
+                        <input type="text" class="form-control"  name="first_name" required>
+                    </div>
+                    <div class="mb-3">
+                      <label for="email" class="form-label">Email</label>
+                      <input type="text" class="form-control"  name="email" required>
+                    </div>
+                    <div class="mb-3">
+                      <label for="password" class="form-label">Parola</label>
+                      <input type="text" class="form-control"  name="password">
+                    </div>
+                    <div class="mb-3">
+                      <label for="title" class="form-label">Titlu</label>
+                      <input type="text" class="form-control"  name="title">
+                    </div>
+                    <div class="mb-3">
+                      <select class="form-select" name="education_level" aria-label="educationLevelLabel">
+                        <option value="">Nivel educatie</option>
+                        <option value="bsc">Licenta</option>
+                        <option value="msc">Masterat</option>
+                      </select>
+                    </div>
+                    <div class="mb-3">
+                      <select class="form-select" name="faculty_id" id="facultySelect" aria-label="facultiesLabel">
+                        <option value="">Alege facultatea</option>
+                        <% if (faculties.length === 0) { %>
+                          <option value="">Nu există facultăți disponibile</option>
+                        <% } else { %>
+                          <% faculties.forEach(faculty => { %>
+                            <option value="<%= faculty.id %>"><%= faculty.name %></option>
+                          <% }); } %>                        
+                      </select>
+                    </div>
+                    <div class="mb-3">
+                      <select class="form-select" name="specialization_id" id="specializationSelect" aria-label="specializationsLabel">
+                        <option value="">Alege specializarea</option>
+                      </select>
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Închide</button>
+                        <button type="submit" class="btn btn-primary">Editeaza</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
