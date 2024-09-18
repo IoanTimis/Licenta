@@ -18,7 +18,7 @@
             Cont
           </a>
           <ul class="dropdown-menu">
-            <% if (!loggedInUser === null) { %>
+            <% if (loggedInUser) { %>
               <li><a class="dropdown-item" href="/logout">Deconectare</a></li>
             <% } else { %>
               <li><a class="dropdown-item" href="/login">Loghează-te</a></li>

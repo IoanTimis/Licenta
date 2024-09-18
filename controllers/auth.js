@@ -4,6 +4,8 @@ const User = require('../models/user');
 const Faculty = require('../models/faculty');
 const Specialization = require('../models/specialization');
 const axios = require('axios');
+const crypto = require('crypto');
+
 
 const getSpecializations = async (req, res) => {
   const faculty_id = req.params.id;
@@ -31,13 +33,13 @@ const registerStudent = async (req, res) => {
 };
 
 const registerStudentPost = async (req, res) => {
-  try {
-    const {first_name, name, email, password, faculty_id, specialization_id, education_level } = req.body;
+  const {first_name, name, email, password, faculty_id, specialization_id, education_level } = req.body;
+  sanitizeHtml(first_name);
+  sanitizeHtml(name);
+  sanitizeHtml(email);
 
+  try {
     const hashedPassword = await bcrypt.hash(password, 8);
-    sanitizeHtml(first_name);
-    sanitizeHtml(name);
-    sanitizeHtml(email);
     
     const userInstance = await User.create({
       first_name: first_name,
@@ -60,14 +62,14 @@ const registerTeacher = (req, res) => {
 };
 
 const registerTeacherPost = async (req, res) => {
-  try {
-    const {first_name, name, email, password, title} = req.body;
+  const {first_name, name, email, password, title} = req.body;
+  sanitizeHtml(first_name);
+  sanitizeHtml(name);
+  sanitizeHtml(email);
+  sanitizeHtml(title);
 
+  try {
     const hashedPassword = await bcrypt.hash(password, 8);
-    sanitizeHtml(first_name);
-    sanitizeHtml(name);
-    sanitizeHtml(email);
-    sanitizeHtml(title);
     
     const userInstance = await User.create({
       first_name: first_name,
@@ -95,6 +97,7 @@ const login = (req, res, next) => {
 
 const loginPost = async (req, res, next) => {
   const { email, password } = req.body;
+  
   if (email && password) {
     try {
       const user = await User.findOne({ where: { email } });
@@ -134,9 +137,13 @@ const loginPost = async (req, res, next) => {
 };
 
 //google auth----------------------------------------------------------------------------------------------------------------
+function generateRandomPassword() {
+  return crypto.randomBytes(16).toString('hex');
+}
+
 const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
-const REDIRECT_URI = '<http://www.licentatest.com/auth/google/callBack>';
+const REDIRECT_URI = 'http://localhost:8080/auth/google/callback';
 
 // Google Login Flow
 const googleLogin = (req, res) => {
@@ -162,32 +169,65 @@ const googleCallback = async (req, res) => {
       headers: { Authorization: `Bearer ${access_token}` },
     });
 
-    const user = await User.findOrCreate({where: {email: profile.email}, defaults: {}}).then(([user, created]) => {
-      if (created) {
-        user.id = user.id;
-        user.first_name = profile.given_name;
-        user.name = profile.family_name;
-        user.email = profile.email;
-        user.save();
+    const randomPassword = generateRandomPassword();
+    const hashedPassword = await bcrypt.hash(randomPassword, 8);
+
+    const user = await User.findOrCreate({
+      where: { email: profile.email },
+      defaults: {
+        first_name: profile.given_name || 'DefaultFirstName',
+        name: profile.family_name || 'DefaultLastName',
+        email: profile.email,
+        password: hashedPassword
       }
     });
-    req.session.loggedInUser = user;
 
-    res.redirect('/'); 
+    const [createdUser, created] = user;
+    // if (created) {
+    //   console.log('Utilizator nou creat:', createdUser);
+    // } else {
+    //   console.log('Utilizator existent:', createdUser);
+    // }
+
+    const id = createdUser.id;
+    console.log('id callback fucntion:', id);
+
+    res.redirect(`http://www.licentatest.com/choose-profile/${id}`);
   } catch (error) {
-    console.error('Error in Google Callback:', error.response.data.error);
-    res.redirect('/login');
+    console.error('Error in Google Callback:', error.message);
+    res.status(500).send('Google callback error');
   }
 };
 
-const completeProfile = (req, res) => {
+
+const completeProfile = async (req, res) => {
+  const id = req.params.id;
+
+  try{
+    const user = await User.findByPk(id);
+    
+    if(!user){
+      return res.status(404).send('User not found');
+    }
+
+    req.session.loggedInUser = {
+      id: user.id,
+      first_name: user.first_name,
+      name: user.name,
+      email: user.email,
+    };
+    console.log('req.session.loggedInUser:', req.session.loggedInUser);
+  }catch(error){
+    console.error('Error completing profile:', error);
+    res.status(500).send('Internal Server Error');
+  }
   res.render('pages/auth/completeProfile');
 };
 
 const completeProfileStudent = async (req, res) => {
   try {
     const faculties = await Faculty.findAll();
-    return res.render('pages/auth/completeProfileStudent', { faculties: faculties });
+    res.render('pages/auth/completeProfileStudent', { faculties: faculties });
   }
   catch (error) {
     console.error('Error registering user:', error);
@@ -199,11 +239,6 @@ const completeProfileStudentPut = async (req, res) => {
   const id = req.session.loggedInUser.id;
   const {faculty_id, specialization_id, education_level} = req.body;
 
-  req.session.loggedInUser.faculty_id = faculty_id;
-  req.session.loggedInUser.specialization_id = specialization_id;
-  req.session.loggedInUser.education_level = education_level
-  req.session.loggedInUser.type = 'student';
-
   try{
     const user = await User.findByPk(id);
     user.faculty_id = faculty_id;
@@ -212,7 +247,12 @@ const completeProfileStudentPut = async (req, res) => {
     user.type = 'student';
     await user.save();
 
-    res.redirect('/student');
+    req.session.loggedInUser.faculty_id = faculty_id;
+    req.session.loggedInUser.specialization_id = specialization_id;
+    req.session.loggedInUser.education_level = education_level
+    req.session.loggedInUser.type = 'student';
+
+    res.status(200).send('Profile updated successfully!');
   }
   catch(error){
     console.error('Error completing profile:', error);
@@ -228,16 +268,16 @@ const completeProfileTeacherPut = async (req, res) => {
   const id = req.session.loggedInUser.id;
   const {title} = req.body;
 
-  req.session.loggedInUser.title = title;
-  req.session.loggedInUser.type = 'teacher';
-
   try{
     const user = await User.findByPk(id);
     user.title = title;
     user.type = 'teacher';
     await user.save();
 
-    res.redirect('/teacher');
+    req.session.loggedInUser.title = title;
+    req.session.loggedInUser.type = 'teacher';
+
+    res.status(200).send('Profile updated successfully!');
   }
   catch(error){
     console.error('Error completing profile:', error);
@@ -257,7 +297,6 @@ const logout = (req, res) => {
   });
 };
   
-
 module.exports = {
   getSpecializations,
   registerTeacher,

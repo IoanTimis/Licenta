@@ -1,9 +1,10 @@
 const express = require('express');
-
 const router  = express.Router(); 
 
+const { isCompleteProfile } = require('../middlewares/completeProfile');
 const { isTeacher } = require('../middlewares/teacher');
 
+router.use([isCompleteProfile]);
 router.use([isTeacher]);
 
 const teacherController = require('../controllers/teacher'); 

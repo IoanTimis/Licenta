@@ -6,7 +6,6 @@ const about = (req, res) => {
   res.render('pages/general/about');
 };
 
-
 module.exports = {
   home,
   about

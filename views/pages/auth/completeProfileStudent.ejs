@@ -3,6 +3,7 @@
 <head>
     <%- include('../../partials/head'); %>
     <script src="/js/registerStudent.js"></script>
+    <script src="/js/completeProfiles.js"></script>
 </head>
 <body class="container">
 
@@ -11,7 +12,7 @@
 </header>
 
 <br><br><br><br>
-<form action="/complete-profile/student" method="PUT">
+<form action="" method="" id="form">
     <div class="mb-3">
         <label for="inputGroupSelect01" class="form-label">Optiuni</label>
         <select class="form-select" id="inputGroupSelect01" name="faculty_id">
@@ -36,8 +37,11 @@
             <option value="msc">MSC</option>
         </select>
     </div> 
+    <div class="mb-3">
+        <label for="type" class="form-label">Tip</label>
+        <input type="text" class="form-control" id="type" name="type" value="student" disabled>
+      </div>
     <button type="submit" class="btn btn-primary">Submit</button>
-    <span>Ai deja cont?  </span><a href="/login">Conecteaza-te</a>
 </form>
 
 <footer class="footer bg-light text-center text-lg-start">

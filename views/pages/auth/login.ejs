@@ -6,29 +6,28 @@
 </head>
 <body class="container">
 
-<header>
-    <%- include('../../partials/generalHeader'); %>
-    <link rel="stylesheet" href="/css/startupPages.css">
-</header>
+    <header>
+        <%- include('../../partials/generalHeader'); %>
+        <link rel="stylesheet" href="/css/startupPages.css">
+    </header>
 
-<br><br><br><br>
-<form action="/login" method="POST">
-    <div class="mb-3">
-        <label for="email" class="form-label">Email</label>
-        <input type="text" class="form-control" id="email" name="email" placeholder="Introduceți email">
-    </div>
-    <div class="mb-3">
-        <label for="password" class="form-label">Parola</label>
-        <input type="password" class="form-control" id="password" name="password" placeholder="Introduceți parola">
-    </div>
+    <br><br><br><br>
+    <form action="/login" method="POST">
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="text" class="form-control" id="email" name="email" placeholder="Introduceți email">
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Parola</label>
+            <input type="password" class="form-control" id="password" name="password" placeholder="Introduceți parola">
+        </div>
 
-    <button type="submit" class="btn btn-primary">Intră în cont</button>
-    <a href="/auth/google" class="btn btn-danger">Continuă cu Google</a>
-</form>
+        <button type="submit" class="btn btn-primary">Intră în cont</button>
+        <a href="/auth/google" class="btn btn-danger">Continuă cu Google</a>
+    </form>
 
-<footer class="footer bg-light text-center text-lg-start">
-    <%- include('../../partials/footer'); %>
-</footer>
-
+    <footer class="footer bg-light text-center text-lg-start">
+        <%- include('../../partials/footer'); %>
+    </footer>
 </body>
 </html>

@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <%- include('../../partials/head'); %>
+    <script src="/js/completeProfiles.js"></script>
 </head>
 <body class="container">
 
@@ -10,17 +11,16 @@
 </header>
 
 <br><br><br><br>
-<form action="/complete-profile/teacher" method="PUT">
+<form action="/complete-profile/teacher" method="PUT" id="formT">
     <div class="mb-3">
         <label for="title" class="form-label">Title</label>
         <input type="text" class="form-control" id="title" name="title" placeholder="Enter title">
     </div>
     <div class="mb-3">
       <label for="type" class="form-label">Tip</label>
-      <input type="text" class="form-control" id="type" name="type" value="teacher" readonly required>
-  </div>
+      <input type="text" class="form-control" id="type" name="type" value="teacher" disabled>
+    </div>
     <button type="submit" class="btn btn-primary">Submit</button>
-    <span>Ai deja cont?  </span><a href="/login">Conecteaza-te</a>
 </form>
 
 <footer class="footer bg-light text-center text-lg-start">

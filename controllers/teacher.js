@@ -8,7 +8,6 @@ const specializationTopic = require('../models/specializationTopic');
 const sanitizeHtml = require('sanitize-html');
 const session = require('express-session');
 
-
 const home = (req, res) => {
   res.render('pages/teacher/index');
 };
@@ -29,10 +28,14 @@ const logout = (req, res) => {
 };
 
 const teacherTopics = async (req, res) => {
-  try{
-    const teacherId = req.session.loggedInUser.id;
+  const teacherId = req.session.loggedInUser.id;
 
-    const faculty = await Faculty.findAll({});
+  try{
+    const faculties = await Faculty.findAll({});
+
+    if(!faculties){
+      return res.status(404).send('Faculties not found');
+    }
 
     const teacher = await User.findByPk(teacherId, {
       include: [
@@ -56,7 +59,7 @@ const teacherTopics = async (req, res) => {
       return res.status(404).send('Teacher not found' );
     }
 
-    res.render('pages/teacher/topics', { user: teacher, faculties: faculty, truncateText: truncateText });
+    res.render('pages/teacher/topics', { user: teacher, faculties: faculties, truncateText: truncateText });
   }
   catch (error) {
     console.error('Error getting topics:', error);
@@ -65,9 +68,9 @@ const teacherTopics = async (req, res) => {
 };
 
 const teacherTopic = async (req, res) => {
-  try{
-    const topicId = req.params.id;
+  const topicId = req.params.id;
 
+  try{
     const topic = await Topic.findByPk(topicId, {
       include: {
         model: User,
@@ -89,9 +92,9 @@ const teacherTopic = async (req, res) => {
 };
 
 const apiTeacherTopic = async (req, res) => {
-  try{
-    const topicId = req.params.id;
+  const topicId = req.params.id;
 
+  try{
     const topic = await Topic.findByPk(topicId, {
       include: {
         model: User,
@@ -103,9 +106,8 @@ const apiTeacherTopic = async (req, res) => {
     if (!topic) {
       return res.status(404).json({ message: 'Topic not found' });
     }
-    var id = $(this).data('id');
 
-    return res.json(topic);
+    res.json(topic);
   }
   catch (error) {
     console.error('Error getting topic:', error);
@@ -116,13 +118,18 @@ const apiTeacherTopic = async (req, res) => {
 const getSpecializations = async (req, res) => {
   const faculty_id = req.params.id;
   
-  try {
-      const specializations = await Specialization.findAll({
-          where: {
-              faculty_id: faculty_id
-          }
-      });
-      res.json(specializations);
+  try{
+    const specializations = await Specialization.findAll({
+        where: {
+            faculty_id: faculty_id
+        }
+    });
+
+    if(!specializations){
+      return res.status(404).send('Specializations not found')
+    }
+
+    res.json(specializations);
   } catch (error) {
       console.error('Error fetching specializations:', error);
       res.status(500).send('Internal Server Error');
@@ -131,14 +138,13 @@ const getSpecializations = async (req, res) => {
 };
 
 const addTopic = async (req, res) => {
+  const teacherId = req.session.loggedInUser.id;
+  const { title, description, keywords, slots, education_level, specialization_ids } = req.body;
+  sanitizeHtml(title);
+  sanitizeHtml(description);
+  sanitizeHtml(keywords);
+
   try{
-    const teacherId = req.session.loggedInUser.id;
-
-    const { title, description, keywords, slots, education_level, specialization_ids } = req.body;
-    sanitizeHtml(title);
-    sanitizeHtml(description);
-    sanitizeHtml(keywords);
-
     const topic = await Topic.create({
       title: title,
       description: description,
@@ -173,16 +179,14 @@ const addTopic = async (req, res) => {
 };
 
 const editTopic = async (req, res) => {
-  
-  try{
-    const topicId = req.params.id;
-    const user = req.session.loggedInUser;
-  
-    const { title, description, keywords, slots, education_level } = req.body;
-    sanitizeHtml(title);
-    sanitizeHtml(description);
-    sanitizeHtml(keywords);
+  const topicId = req.params.id;
+  const user = req.session.loggedInUser;
+  const { title, description, keywords, slots, education_level } = req.body;
+  sanitizeHtml(title);
+  sanitizeHtml(description);
+  sanitizeHtml(keywords);
 
+  try{
     const topic = await Topic.findByPk(topicId);
 
     if (!topic) {
@@ -210,10 +214,10 @@ const editTopic = async (req, res) => {
 };
 
 const deleteTopic = async (req, res) => {
-  try{
-    const topicId = req.params.id;
-    const user = req.session.loggedInUser;
+  const topicId = req.params.id;
+  const user = req.session.loggedInUser;
   
+  try{
     const topic = await Topic.findByPk(topicId);
 
     if (!topic) {
@@ -236,9 +240,9 @@ const deleteTopic = async (req, res) => {
 
 //Student requests------------------------------------------------------------------------------------------------------
 const studentRequests = async (req, res) => {
-  try{
-    const teacherId = req.session.loggedInUser.id;
+  const teacherId = req.session.loggedInUser.id;
 
+  try{
     const requests = await topicRequest.findAll({
       where: {
         teacher_id: teacherId
@@ -259,6 +263,10 @@ const studentRequests = async (req, res) => {
       ]
     });
 
+    if(!requests){
+      return res.status(404).send('Requests not found');
+    }
+
     res.render('pages/teacher/studentRequests', { studentRequests: requests, truncateText: truncateText });
   }
   catch (error) {
@@ -268,9 +276,9 @@ const studentRequests = async (req, res) => {
 }
 
 const studentRequest = async (req, res) => {
-  try{
-    const requestId = req.params.id;
+  const requestId = req.params.id;
 
+  try{
     const request = await topicRequest.findByPk(requestId,
       {
         include: [{
@@ -298,13 +306,13 @@ const studentRequest = async (req, res) => {
 }
 
 const teacherResponse = async (req, res) => {
-  try{
-    const teacherId = req.session.loggedInUser.id;
-    const requestId = req.params.id;
-    const { status, message } = req.body;
-    sanitizeHtml(message);
-    console.log(status, message);
+  const teacherId = req.session.loggedInUser.id;
+  const requestId = req.params.id;
+  const { status, message } = req.body;
+  sanitizeHtml(message);
+  console.log(status, message);
 
+  try{
     const request = await topicRequest.findByPk(requestId,{
       include: {
         model: Topic,
@@ -325,11 +333,8 @@ const teacherResponse = async (req, res) => {
     await request.save();
 
     if(status === 'accepted'){
-      console.log("slots----------------------------------------------------------------");
-      console.log(request.topic.slots);
       request.topic.slots = request.topic.slots - 1;
       await request.topic.save();
-      console.log(request.topic.slots);
     }
 
     res.json({ status: 'success' });
@@ -341,10 +346,10 @@ const teacherResponse = async (req, res) => {
 }
 
 const deleteRequest = async (req, res) => {
-  try{
-    const requestId = req.params.id;
-    const user = req.session.loggedInUser;
+  const requestId = req.params.id;
+  const user = req.session.loggedInUser;
   
+  try{
     const request = await topicRequest.findByPk(requestId);
 
     if (!request) {

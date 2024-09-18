@@ -1,6 +1,8 @@
 const express = require('express');
+const router  = express.Router();
 
-const router  = express.Router(); 
+// const { isCompleteProfile } = require('../middlewares/completeProfile');
+
 
 const authController = require('../controllers/auth');
 
@@ -18,11 +20,13 @@ router.get('/logout', authController.logout);
 
 router.get('/auth/google', authController.googleLogin);
 router.get('/auth/google/callback', authController.googleCallback);
-router.get('/complete-profile', authController.completeProfile);
-router.get('/complete-profile/teacher', authController.completeProfileTeacher);
-router.put('/complete-profile/teacher', authController.completeProfileTeacherPut);
-router.get('/complete-profile/student', authController.completeProfileStudent);
-router.put('/complete-profile/student', authController.completeProfileStudentPut);
+router.get('/choose-profile/:id', authController.completeProfile);
+
+router.get('/complete-profile/as-teacher', authController.completeProfileTeacher);
+router.put('/complete-profile/as-teacher', authController.completeProfileTeacherPut);
+
+router.get('/complete-profile/as-student', authController.completeProfileStudent);
+router.put('/complete-profile/as-student', authController.completeProfileStudentPut);
 
 
 module.exports = router;

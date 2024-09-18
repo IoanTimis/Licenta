@@ -7,7 +7,6 @@ const { Op } = require('sequelize');
 const topicRequest = require('../models/topicRequest');
 const sanitizeHtml = require('sanitize-html');
 
-
 const home = (req, res) => {
   res.render('pages/student/index');
 };
@@ -28,18 +27,22 @@ const logout = (req, res) => {
 };
 
 const getStudentTopics = async (req, res) => {
-  try {
-    const specialization_id = req.session.loggedInUser.specialization_id;
-    const education_level = req.session.loggedInUser.education_level;
+  const specialization_id = req.session.loggedInUser.specialization_id;
+  const education_level = req.session.loggedInUser.education_level;
 
+  try {
     const specialization = await Specialization.findByPk(specialization_id);
     if (!specialization) {
-      return res.status(404).json({ message: 'Specialization not found' });
+        return res.status(404).status('Specialization not found');
       }
       
-      const faculty = await specialization.getFaculty({
-        attributes: ['img_url']
-      });      
+    const faculty_photo = await specialization.getFaculty({
+      attributes: ['img_url']
+    });
+    
+    if(!faculty_photo){
+      return res.status(404).status('Faculty photo not found');
+    }
 
     const topics = await specialization.getTopics({
       where: {
@@ -58,7 +61,7 @@ const getStudentTopics = async (req, res) => {
       return res.status(404).json({ message: 'Topics not found' });
     };
 
-   return res.render('pages/student/topics', { topics: topics, logo: faculty,truncateText: truncateText });
+   return res.render('pages/student/topics', { topics: topics, logo: faculty_photo, truncateText: truncateText });
 
   }
   catch (error) {
@@ -68,9 +71,9 @@ const getStudentTopics = async (req, res) => {
 };
 
 const topicPage = async (req, res) => {
-  try {
-    const topic_id = req.params.id;
+  const topic_id = req.params.id;
 
+  try {
     const topic = await Topic.findByPk(topic_id, {
       include: [{
         model: User,
@@ -103,19 +106,23 @@ const topicPage = async (req, res) => {
 //request topics------------------------------------------------------------------------------------------------------
 
 const getRequestTopics = async (req, res) => {
-  try {
-    const student_id = req.session.loggedInUser.id;
-    const specialization_id = req.session.loggedInUser.specialization_id;
+  const student_id = req.session.loggedInUser.id;
+  const specialization_id = req.session.loggedInUser.specialization_id;
 
+  try {
     const specialization = await Specialization.findByPk(specialization_id);
 
     if (!specialization) {
       return res.status(404).json({ message: 'Specialization not found' });
     }
 
-    const faculty = await specialization.getFaculty({
+    const faculty_photo = await specialization.getFaculty({
       attributes: ['img_url']
     });
+
+    if(!faculty_photo){
+      return res.status(404).status('Faculty photo not found');
+    }
     
     const requests = await topicRequest.findAll({
       where: {
@@ -138,7 +145,7 @@ const getRequestTopics = async (req, res) => {
       delete req.session.loggedInUser;
       res.redirect('/');
     };
-    return res.render('pages/student/requests', { requests: requests, logo: faculty, truncateText: truncateText });
+    return res.render('pages/student/requests', { requests: requests, logo: faculty_photo, truncateText: truncateText });
   }
   catch (error) {
     console.error('Error getting requests:', error);
@@ -147,9 +154,9 @@ const getRequestTopics = async (req, res) => {
 };
 
 const getRequestTopic = async (req, res) => {
-  try {
-    const request_id = req.params.id;
+  const request_id = req.params.id;
 
+  try {
     const request = await topicRequest.findByPk(request_id, {
       include: [{
         model: User,
@@ -174,11 +181,11 @@ const getRequestTopic = async (req, res) => {
 };
 
 const newRequest = async (req, res) => {
-  try {
-    const student_id = req.session.loggedInUser.id;
-    const { topic_id, teacher_id, message } = req.body;
-    sanitizeHtml(message);
+  const student_id = req.session.loggedInUser.id;
+  const { topic_id, teacher_id, message } = req.body;
+  sanitizeHtml(message);
 
+  try {
     const request = await topicRequest.create({
       student_id: student_id,
       teacher_id: teacher_id,
@@ -199,10 +206,10 @@ const newRequest = async (req, res) => {
 };
 
 const deleteRequest = async (req, res) => {
+  const student_id = req.session.loggedInUser.id;
+  const request_id = req.params.id;
+
   try {
-    const student_id = req.session.loggedInUser.id;
-    const request_id = req.params.id;
-    
     const request = await topicRequest.findByPk(request_id);
     if (!request) {
       return res.status(404).json({ message: 'Request not found' });
@@ -221,10 +228,6 @@ const deleteRequest = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
-
-
-
-
 
 module.exports = {
   home,

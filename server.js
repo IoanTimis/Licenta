@@ -14,7 +14,6 @@ dotenv.config();
 var session = require('express-session');
 var FileStore = require('session-file-store')(session);
 
-
 app.use(session({ secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
@@ -48,7 +47,6 @@ const topic = require('./models/topic');
 const specializationTopic = require('./models/specializationTopic');
 const topicRequest = require('./models/topicRequest');
 
-
 sequelize.sync({ force: false, logging: console.log })
   .then(() => {
     console.log('Database & tables created!');
@@ -56,7 +54,6 @@ sequelize.sync({ force: false, logging: console.log })
   .catch(error => {
     console.error('Error creating database:', error);
   });
-
 
 const adminRoutes = require('./routes/admin');
 app.use('/admin', adminRoutes);
@@ -72,7 +69,6 @@ app.use('/', authRoutes);
 
 const generalRoutes = require('./routes/general');
 app.use('/', generalRoutes);
-
 
 app.listen(8080, () => {
   console.log('Server is running on port 8080');
