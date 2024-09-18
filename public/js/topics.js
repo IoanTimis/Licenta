@@ -98,7 +98,7 @@ $(document).ready(function() {
   $('#topicsRow').on('click', '.editBtn', function() {
     const topicId = $(this).data('id');
     $.ajax({
-        url: `/teacher/api/topic/${topicId}`, 
+        url: `/teacher/fetch/topic/${topicId}`, 
         type: 'GET',
         success: function(data) {
             console.log('Data:', data);
@@ -141,7 +141,7 @@ $(document).ready(function() {
   $('#topicsRow').on('click', '.cloneBtn', function() {
     const topicId = $(this).data('id');
     $.ajax({
-        url: `/teacher/api/topic/${topicId}`, 
+        url: `/teacher/fetch/topic/${topicId}`, 
         type: 'GET',
         success: function(data) {
             console.log('Data:', data);
@@ -183,7 +183,7 @@ $(document).ready(function() {
     console.log('Faculty changed');
     var selected = $(this).val();
     $.ajax({
-        url: `/api/getSpecializations/${selected}`,
+        url: `/fetch/getSpecializations/${selected}`,
         method: 'GET',
         success: function(response) {
             $(".chooseSpecialization").empty();

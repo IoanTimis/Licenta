@@ -36,8 +36,7 @@ const User = sequelize.define('users', {
   },
   type: {
     type: DataTypes.ENUM('student', 'teacher', 'admin'),
-    allowNull: false,
-    defaultValue: 'student',
+    allowNull: true,
   },
   faculty_id: {
     type: DataTypes.INTEGER,

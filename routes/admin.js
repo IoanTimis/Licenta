@@ -22,7 +22,7 @@ router.put('/faculty/update/:id', adminController.updateFaculty);
 router.delete('/faculty/delete/:id', adminController.deleteFaculty);
 
 router.get('/specializations', adminController.getSpecializations);
-router.get('/api/specializations/:id', adminController.getFacultySpecializations);
+router.get('/fetch/specializations/:id', adminController.getFacultySpecializations);
 router.get('/specialization/get/:id', adminController.getSpecialization);
 router.post('/specialization/add', adminController.addSpecialization);
 router.put('/specialization/update/:id', adminController.editSpecialization);

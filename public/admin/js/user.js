@@ -95,7 +95,7 @@ $(document).ready(function(){
     var selected = $(this).val();
 
     $.ajax({
-      url: `/admin/api/specializations/${selected}`,
+      url: `/admin/fetch/specializations/${selected}`,
       method: 'GET',
       success: function(response) {
         var specializationSelect = $("#specializationSelect");

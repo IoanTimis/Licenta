@@ -1,0 +1,43 @@
+main {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  color: #333;
+  margin-top: 50px;
+}
+
+.btn {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  font-size: 16px;
+  border-radius: 5px;
+  border: none;
+  color: #fff;
+}
+
+.btn-primary {
+  background-color: #ff4757;
+}
+
+.btn-danger {
+  background-color: #4285f4;
+}
+
+.btn-secondary {
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+a {
+  text-decoration: none;
+}
+
+
+

@@ -1,5 +1,5 @@
-var express = require('express');
-var app = express();
+const express = require('express');
+const app = express();
 
 app.use(express.static('public'))
 
@@ -43,10 +43,10 @@ app.use(cookieParser());
 const sequelize = require('./config/database');
 const faculty = require('./models/faculty');
 const user = require('./models/user');
-const topicRequest = require('./models/topicRequest');
-const topic = require('./models/topic');
 const specialization = require('./models/specialization');
+const topic = require('./models/topic');
 const specializationTopic = require('./models/specializationTopic');
+const topicRequest = require('./models/topicRequest');
 
 
 sequelize.sync({ force: false, logging: console.log })
@@ -65,7 +65,7 @@ const teacherRoutes = require('./routes/teacher');
 app.use('/teacher', teacherRoutes);
 
 const studentRoutes = require('./routes/student');
-app.use('/student',studentRoutes);
+app.use('/student', studentRoutes);
 
 const authRoutes = require('./routes/auth');
 app.use('/', authRoutes);

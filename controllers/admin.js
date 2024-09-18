@@ -49,7 +49,7 @@ const getFaculty = async (req, res) => {
     }
 
     res.json(faculty);
-  } catch (error) {api/specializations
+  } catch (error) {
     console.error(error);
     res.status(500).send('Server error');
   }
