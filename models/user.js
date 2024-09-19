@@ -38,7 +38,7 @@ const User = sequelize.define('users', {
     type: DataTypes.ENUM('student', 'teacher', 'admin'),
     allowNull: true,
   },
-  completeProfile: {
+  complete_profile: {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
   },

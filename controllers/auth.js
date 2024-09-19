@@ -119,7 +119,7 @@ const loginPost = async (req, res, next) => {
         education_level: user.education_level,
         faculty_id: user.faculty_id,
         type: user.type,
-        completeProfile: user.completeProfile,
+        complete_profile: user.complete_profile,
       };
 
       if(req.session.loggedInUser.type == 'admin'){
@@ -180,13 +180,13 @@ const googleCallback = async (req, res) => {
         name: profile.family_name,
         email: profile.email,
         password: hashedPassword,
-        completeProfile: false,
+        complete_profile: false,
       }
     });
 
     const [createdUser, created] = user;
     
-    if(!created && createdUser.completeProfile){
+    if(!created && createdUser.complete_profile){
       req.session.loggedInUser = {
         id: createdUser.id,
         first_name: createdUser.first_name,
@@ -197,7 +197,7 @@ const googleCallback = async (req, res) => {
         education_level: createdUser.education_level,
         faculty_id: createdUser.faculty_id,
         type: createdUser.type,
-        completeProfile: createdUser.completeProfile,
+        complete_profile: createdUser.complete_profile,
       };
       
       if(req.session.loggedInUser.type == 'student'){
@@ -231,7 +231,7 @@ const completeProfile = async (req, res) => {
       first_name: user.first_name,
       name: user.name,
       email: user.email,
-      completeProfile: user.completeProfile,
+      complete_profile: user.complete_profile,
     };
     
   }catch(error){
@@ -262,14 +262,14 @@ const completeProfileStudentPut = async (req, res) => {
     user.specialization_id = specialization_id;
     user.education_level = education_level;
     user.type = 'student';
-    user.completeProfile = true;
+    user.complete_profile = true;
     await user.save();
 
     req.session.loggedInUser.faculty_id = faculty_id;
     req.session.loggedInUser.specialization_id = specialization_id;
     req.session.loggedInUser.education_level = education_level
     req.session.loggedInUser.type = 'student';
-    req.session.loggedInUser.completeProfile = true;
+    req.session.loggedInUser.complete_profile = true;
 
     console.log('req.session.loggedInUser dupa completare profil:', req.session.loggedInUser);
 
@@ -293,12 +293,12 @@ const completeProfileTeacherPut = async (req, res) => {
     const user = await User.findByPk(id);
     user.title = title;
     user.type = 'teacher';
-    user.completeProfile = true;
+    user.complete_profile = true;
     await user.save();
 
     req.session.loggedInUser.title = title;
     req.session.loggedInUser.type = 'teacher';
-    req.session.loggedInUser.completeProfile = true;
+    req.session.loggedInUser.complete_profile = true;
 
     res.status(200).send('Profile updated successfully!');
   }
