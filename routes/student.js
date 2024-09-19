@@ -19,5 +19,4 @@ router.get('/request-topic/:id', studentController.getRequestTopic);
 router.post('/new/request', studentController.newRequest);
 router.delete('/delete/request/:id', studentController.deleteRequest);
 
-
 module.exports = router;

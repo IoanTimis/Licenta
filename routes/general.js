@@ -1,9 +1,8 @@
 const express = require('express');
 const router  = express.Router();
 
-// const { isCompleteProfile } = require('../middlewares/completeProfile');
-
-// router.use([isCompleteProfile]);
+const { isCompleteProfile } = require('../middlewares/completeProfile');
+router.use([isCompleteProfile]);
 
 const generalController = require('../controllers/general');
 

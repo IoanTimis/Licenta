@@ -118,7 +118,8 @@ const loginPost = async (req, res, next) => {
         specialization_id: user.specialization_id,
         education_level: user.education_level,
         faculty_id: user.faculty_id,
-        type: user.type
+        type: user.type,
+        completeProfile: user.completeProfile,
       };
 
       if(req.session.loggedInUser.type == 'admin'){
@@ -175,30 +176,45 @@ const googleCallback = async (req, res) => {
     const user = await User.findOrCreate({
       where: { email: profile.email },
       defaults: {
-        first_name: profile.given_name || 'DefaultFirstName',
-        name: profile.family_name || 'DefaultLastName',
+        first_name: profile.given_name,
+        name: profile.family_name,
         email: profile.email,
-        password: hashedPassword
+        password: hashedPassword,
+        completeProfile: false,
       }
     });
 
     const [createdUser, created] = user;
-    // if (created) {
-    //   console.log('Utilizator nou creat:', createdUser);
-    // } else {
-    //   console.log('Utilizator existent:', createdUser);
-    // }
+    
+    if(!created && createdUser.completeProfile){
+      req.session.loggedInUser = {
+        id: createdUser.id,
+        first_name: createdUser.first_name,
+        name: createdUser.name,
+        email: createdUser.email,
+        title: createdUser.title,
+        specialization_id: createdUser.specialization_id,
+        education_level: createdUser.education_level,
+        faculty_id: createdUser.faculty_id,
+        type: createdUser.type,
+        completeProfile: createdUser.completeProfile,
+      };
+      
+      if(req.session.loggedInUser.type == 'student'){
+        return res.redirect('/student');
+      }else{
+        return res.redirect('/teacher');
+      }
+    }else{
+      const id = createdUser.id;
+      return res.redirect(`http://www.licentatest.com/choose-profile/${id}`);
+    }
 
-    const id = createdUser.id;
-    console.log('id callback fucntion:', id);
-
-    res.redirect(`http://www.licentatest.com/choose-profile/${id}`);
   } catch (error) {
     console.error('Error in Google Callback:', error.message);
     res.status(500).send('Google callback error');
   }
 };
-
 
 const completeProfile = async (req, res) => {
   const id = req.params.id;
@@ -215,8 +231,9 @@ const completeProfile = async (req, res) => {
       first_name: user.first_name,
       name: user.name,
       email: user.email,
+      completeProfile: user.completeProfile,
     };
-    console.log('req.session.loggedInUser:', req.session.loggedInUser);
+    
   }catch(error){
     console.error('Error completing profile:', error);
     res.status(500).send('Internal Server Error');
@@ -245,12 +262,16 @@ const completeProfileStudentPut = async (req, res) => {
     user.specialization_id = specialization_id;
     user.education_level = education_level;
     user.type = 'student';
+    user.completeProfile = true;
     await user.save();
 
     req.session.loggedInUser.faculty_id = faculty_id;
     req.session.loggedInUser.specialization_id = specialization_id;
     req.session.loggedInUser.education_level = education_level
     req.session.loggedInUser.type = 'student';
+    req.session.loggedInUser.completeProfile = true;
+
+    console.log('req.session.loggedInUser dupa completare profil:', req.session.loggedInUser);
 
     res.status(200).send('Profile updated successfully!');
   }
@@ -272,10 +293,12 @@ const completeProfileTeacherPut = async (req, res) => {
     const user = await User.findByPk(id);
     user.title = title;
     user.type = 'teacher';
+    user.completeProfile = true;
     await user.save();
 
     req.session.loggedInUser.title = title;
     req.session.loggedInUser.type = 'teacher';
+    req.session.loggedInUser.completeProfile = true;
 
     res.status(200).send('Profile updated successfully!');
   }
@@ -285,7 +308,6 @@ const completeProfileTeacherPut = async (req, res) => {
   }
 };
 
-// Logout
 const logout = (req, res) => {
   delete req.session.loggedInUser;
   req.session.save(function(err) {
