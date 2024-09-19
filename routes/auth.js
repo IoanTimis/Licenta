@@ -20,7 +20,7 @@ router.get('/logout', authController.logout);
 router.get('/auth/google', authController.googleLogin);
 router.get('/auth/google/callback', authController.googleCallback);
 
-router.get('/choose-profile/:id', authController.completeProfile );
+router.get('/choose-profile/:token', authController.completeProfile );
 
 router.get('/complete-profile/as-teacher', authController.completeProfileTeacher);
 router.put('/complete-profile/as-teacher', authController.completeProfileTeacherPut);

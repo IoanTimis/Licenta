@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const Faculty = require('../models/faculty');
 const Specialization = require('../models/specialization');
+const CompleteProfileToken = require('../models/completeProfileToken');
 const axios = require('axios');
 const crypto = require('crypto');
 
@@ -138,10 +139,6 @@ const loginPost = async (req, res, next) => {
 };
 
 //google auth----------------------------------------------------------------------------------------------------------------
-function generateRandomPassword() {
-  return crypto.randomBytes(16).toString('hex');
-}
-
 const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 const REDIRECT_URI = 'http://localhost:8080/auth/google/callback';
@@ -151,6 +148,40 @@ const googleLogin = (req, res) => {
   const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=profile email`;
   res.redirect(url);
 };
+
+function generateRandomPassword() {
+  return crypto.randomBytes(16).toString('hex');
+}
+
+async function generateTokenAndScheduleDeletion(userId) {
+  try {
+    const token = crypto.randomBytes(32).toString('hex');
+
+    const createdToken = await CompleteProfileToken.create({
+      token: token,
+      user_id: userId
+    });
+
+    if (!createdToken) {
+      throw new Error('Failed to create token');
+    }
+
+    console.log(`Token created with ID: ${createdToken.id}`);
+
+    setTimeout(async () => {
+      await CompleteProfileToken.destroy({
+        where: {
+          id: createdToken.id
+        }
+      });
+      console.log(`Token with ID: ${createdToken.id} has been deleted`);
+    }, 5 * 60 * 1000); // 5 minute
+
+    return token;
+  } catch (error) {
+    console.error('Failed to create or delete token:', error);
+  }
+}
 
 // Google Callback
 const googleCallback = async (req, res) => {
@@ -207,7 +238,10 @@ const googleCallback = async (req, res) => {
       }
     }else{
       const id = createdUser.id;
-      return res.redirect(`http://www.licentatest.com/choose-profile/${id}`);
+
+      const token = await generateTokenAndScheduleDeletion(id);
+      
+      return res.redirect(`http://www.licentatest.com/choose-profile/${token}`);
     }
 
   } catch (error) {
@@ -217,9 +251,16 @@ const googleCallback = async (req, res) => {
 };
 
 const completeProfile = async (req, res) => {
-  const id = req.params.id;
+  const token = req.params.token;
 
   try{
+    const completeProfileToken = await CompleteProfileToken.findOne({ where: { token: token } });
+
+    if(!completeProfileToken){
+      return res.status(404).send('Token not found');
+    }
+    const id = completeProfileToken.user_id;
+
     const user = await User.findByPk(id);
     
     if(!user){
