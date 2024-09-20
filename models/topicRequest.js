@@ -9,7 +9,20 @@ const topicRequest = sequelize.define('topic_requests', {
     primaryKey: true,
     autoIncrement: true,
   },
- teacher_id: {
+  teacher_message: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
+  student_message: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
+  status: {
+    type: DataTypes.ENUM('pending', 'accepted', 'rejected'),
+    allowNull: false,
+    defaultValue: 'pending',
+  },
+  teacher_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
@@ -17,7 +30,7 @@ const topicRequest = sequelize.define('topic_requests', {
       key: 'id',
     },
   },
- student_id:{
+  student_id:{
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
@@ -32,19 +45,6 @@ const topicRequest = sequelize.define('topic_requests', {
       model: 'topics',
       key: 'id',
     },
-  },
-  teacher_message: {
-    type: DataTypes.TEXT,
-    allowNull: true,
-  },
-  student_message: {
-    type: DataTypes.TEXT,
-    allowNull: true,
-  },
-  status: {
-    type: DataTypes.ENUM('pending', 'accepted', 'rejected'),
-    allowNull: false,
-    defaultValue: 'pending',
   },
   createdAt: {
     type: DataTypes.DATE,
