@@ -7,9 +7,11 @@ function truncateText(text, maxLength) {
 
 $(document).ready(function() {
 //Add-edit topic------------------------------------------------------------------------------------------------------
-  $("#topicForm").on('submit', function(e) {
+  var form = $('#topicForm');
+  var modal = $('#topicModal');
+
+  $(form).on('submit', function(e) {
     e.preventDefault();
-    var form = $(this);
     var url = form.attr('action');
     var action = form.attr('method');
 
@@ -203,11 +205,11 @@ $(document).ready(function() {
 
 //Populating/clear the modal data------------------------------------------------------------------------------------------------------
   function openModal(action, data = {}) {
-    let modal = $('#topicModal');
-    let form = $('#topicForm');
     let facultyDiv = form.find('select[name="faculty_id"]').closest('div');
     let specializationDiv = $('#selectSpecializationsContainer');
     let addSpecializationsBtn = $('.addSpecializationsBtn');
+    let modal_title = modal.find('.modal-title');
+    let modal_primary_btn = modal.find('.modal-footer').find('.btn-primary');
 
     specializationDiv.empty();
     let html =  `<div class="mb-3">
@@ -220,8 +222,8 @@ $(document).ready(function() {
         $('#modalMsg').text('');
         form.attr('action', '/teacher/topic/add');
         form.attr('method', 'POST');
-        $('#topicModalLabel').text('Adaugă temă de licență');
-        modal.find('.modal-footer').find('.btn-primary').text('Adauga tema');
+        modal_title.text('Adaugă temă de licență');
+        modal_primary_btn .text('Adauga tema');
 
         form.find('input[name="title"]').val('');
         form.find('input[name="keywords"]').val('');
@@ -236,8 +238,8 @@ $(document).ready(function() {
       $('#modalMsg').text('');
       form.attr('action', `/teacher/topic/edit/${data.id}`);
       form.attr('method', 'PUT');
-      $('#topicModalLabel').text('Editează temă de licență');
-      modal.find('.modal-footer').find('.btn-primary').text('Editeaza tema');
+      modal_title.text('Editează temă de licență');
+      modal_primary_btn .text('Editeaza tema');
 
       form.find('input[name="title"]').val(data.title);
       form.find('input[name="keywords"]').val(data.keywords);
@@ -255,8 +257,8 @@ $(document).ready(function() {
         $('#modalMsg').text('mesaj');
         form.attr('action', '/teacher/topic/add');
         form.attr('method', 'POST');
-        $('#topicModalLabel').text('Clonează temă de licență');
-        modal.find('.modal-footer').find('.btn-primary').text('Cloneaza tema');
+        modal_title.text('Clonează temă de licență');
+        modal_primary_btn .text('Cloneaza tema');
 
         form.find('input[name="title"]').val(data.title);
         form.find('input[name="keywords"]').val(data.keywords);
@@ -268,6 +270,6 @@ $(document).ready(function() {
         form.find('select[name="specialization"]').val(data.specialization_id).attr('disabled', false);
     };
     
-    $('#topicModal').modal('show');
+    $(modal).modal('show');
   };
 });

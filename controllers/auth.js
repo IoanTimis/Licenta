@@ -156,7 +156,6 @@ function generateRandomPassword() {
 async function generateTokenAndScheduleDeletion(userId) {
   try {
     const token = crypto.randomBytes(32).toString('hex');
-
     const createdToken = await CompleteProfileToken.create({
       token: token,
       user_id: userId
@@ -169,19 +168,25 @@ async function generateTokenAndScheduleDeletion(userId) {
     console.log(`Token created with ID: ${createdToken.id}`);
 
     setTimeout(async () => {
-      await CompleteProfileToken.destroy({
-        where: {
-          id: createdToken.id
-        }
-      });
-      console.log(`Token with ID: ${createdToken.id} has been deleted`);
+      try {
+        await CompleteProfileToken.destroy({
+          where: {
+            id: createdToken.id
+          }
+        });
+        console.log(`Token with ID: ${createdToken.id} has been deleted`);
+      } catch (innerError) {
+        console.error('Failed to delete token:', innerError);
+      }
     }, 5 * 60 * 1000); // 5 minute
 
     return token;
   } catch (error) {
     console.error('Failed to create or delete token:', error);
+    throw error;
   }
 }
+
 
 // Google Callback
 const googleCallback = async (req, res) => {
