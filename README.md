@@ -12,7 +12,7 @@ The application facilitates the online management and selection of BSc/MSc thesi
    - They have access to a filtered list of requests from students, allowing efficient management of submissions based on various criteria such as faculty or specialization.
 
 2. **For Students:**
-   - Students can browse available projects by lecturer, faculty, specialization, or search by keywords.
+   - Students can search available projects by lecturer or keywords.
    - An automatic filter ensures that students only see projects related to their specialization, education level (BSc or MSc), and with available slots.
    - Students can send requests for one or more projects to the lecturers.
 
