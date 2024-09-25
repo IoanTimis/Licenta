@@ -9,7 +9,7 @@ The application facilitates the online management and selection of BSc/MSc thesi
    - Lecturers can add, edit, clone, and delete BSc/MSc projects, specifying the title, keywords, description, number of available student slots, associated faculty, and specialization.
    - Each project also requires the specification of the education level (BSc or MSc), ensuring projects are categorized according to academic levels.
    - Lecturers can accept student requests, which automatically decrease the number of available slots.
-   - They have access to a filtered list of requests from students, allowing efficient management of submissions based on various criteria such as faculty or specialization.
+   - They have access to a filtered list of requests from students, allowing efficient management of submissions based on various criteria such as accepted, rejected or pending.
 
 2. **For Students:**
    - Students can search available projects by lecturer or keywords.
