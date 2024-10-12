@@ -1,4 +1,4 @@
-**Online BSc/MSc Project Selection Application**  
+**Online BSc/MSc Themes Selection Application**  
 **Author:** Ioan Timiș
 
 The application facilitates the online management and selection of BSc/MSc thesis projects, integrating authentication and filtering functionalities for both lecturers and students.  
