@@ -24,9 +24,9 @@ The application facilitates the online management and selection of BSc/MSc thesi
    - Additionally, admins can manage (view, edit, delete) user accounts, adjusting access as needed across the platform.
 
 **Technologies used:**
-- Backend: Node.js with Express.js
+- Backend: Node.js with Express.js and EJS for templating
 - Database: MySQL, managed with Sequelize ORM for relational data handling
 - Authentication: Google OAuth and standard email/password methods
-- Frontend: HTML, CSS, JavaScript, and EJS for templating
+- Frontend: HTML, CSS, JavaScript
 
 This application is designed to enhance the administrative and educational interaction between students and lecturers, providing a streamlined approach to thesis project management in an academic environment.
