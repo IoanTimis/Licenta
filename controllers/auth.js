@@ -26,8 +26,7 @@ const registerStudent = async (req, res) => {
   try {
     const faculties = await Faculty.findAll();
     return res.render('pages/auth/registerStudent', { faculties: faculties });
-  }
-  catch (error) {
+  } catch (error) {
     console.error('Error registering user:', error);
     res.status(500).send('Internal Server Error');
   };
@@ -222,7 +221,7 @@ const googleCallback = async (req, res) => {
 
     const [createdUser, created] = user;
     
-    if(!created && createdUser.complete_profile){
+    if (!created && createdUser.complete_profile) {
       req.session.loggedInUser = {
         id: createdUser.id,
         first_name: createdUser.first_name,
@@ -236,12 +235,12 @@ const googleCallback = async (req, res) => {
         complete_profile: createdUser.complete_profile,
       };
       
-      if(req.session.loggedInUser.type == 'student'){
+      if (req.session.loggedInUser.type == 'student') {
         return res.redirect('/student');
-      }else{
+      } else {
         return res.redirect('/teacher');
       }
-    }else{
+    } else {
       const id = createdUser.id;
 
       const token = await generateTokenAndScheduleDeletion(id);
@@ -258,17 +257,20 @@ const googleCallback = async (req, res) => {
 const completeProfile = async (req, res) => {
   const token = req.params.token;
 
-  try{
-    const completeProfileToken = await CompleteProfileToken.findOne({ where: { token: token } });
+  try {
+    const completeProfileToken = await CompleteProfileToken.findOne({ where: { token } });
 
-    if(!completeProfileToken){
-      return res.status(404).send('Token not found');
+
+    if (!completeProfileToken) {
+      req.session.loggedInUser = null;
+      return res.render('pages/general/errorPage', { message: 'Invalid token' });
     }
+
     const id = completeProfileToken.user_id;
 
     const user = await User.findByPk(id);
     
-    if(!user){
+    if (!user) {
       return res.status(404).send('User not found');
     }
 
@@ -278,9 +280,10 @@ const completeProfile = async (req, res) => {
       name: user.name,
       email: user.email,
       complete_profile: user.complete_profile,
+      complete_profile_token: token,
     };
     
-  }catch(error){
+  } catch (error) {
     console.error('Error completing profile:', error);
     res.status(500).send('Internal Server Error');
   }
@@ -302,7 +305,7 @@ const completeProfileStudentPut = async (req, res) => {
   const id = req.session.loggedInUser.id;
   const {faculty_id, specialization_id, education_level} = req.body;
 
-  try{
+  try {
     const user = await User.findByPk(id);
     user.faculty_id = faculty_id;
     user.specialization_id = specialization_id;
@@ -316,12 +319,12 @@ const completeProfileStudentPut = async (req, res) => {
     req.session.loggedInUser.education_level = education_level
     req.session.loggedInUser.type = 'student';
     req.session.loggedInUser.complete_profile = true;
+    req.session.loggedInUser.complete_profile_token = null;
 
     console.log('req.session.loggedInUser dupa completare profil:', req.session.loggedInUser);
 
     res.status(200).send('Profile updated successfully!');
-  }
-  catch(error){
+  } catch(error) {
     console.error('Error completing profile:', error);
     res.status(500).send('Internal Server Error');
   }
@@ -335,7 +338,7 @@ const completeProfileTeacherPut = async (req, res) => {
   const id = req.session.loggedInUser.id;
   const {title} = req.body;
 
-  try{
+  try {
     const user = await User.findByPk(id);
     user.title = title;
     user.type = 'teacher';
@@ -345,10 +348,10 @@ const completeProfileTeacherPut = async (req, res) => {
     req.session.loggedInUser.title = title;
     req.session.loggedInUser.type = 'teacher';
     req.session.loggedInUser.complete_profile = true;
+    req.session.loggedInUser.complete_profile_token = null;
 
     res.status(200).send('Profile updated successfully!');
-  }
-  catch(error){
+  } catch (error) {
     console.error('Error completing profile:', error);
     res.status(500).send('Internal Server Error');
   }
