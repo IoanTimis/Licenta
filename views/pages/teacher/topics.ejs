@@ -20,7 +20,6 @@
                     <div class="col">
                         <a href="/teacher/topic/<%= topic.id %>" class="text-decoration-none text-dark">
                             <div class="card" data-id="<%= topic.id %>">
-                                <img src="<%= topic.specializations[0].faculty.img_url %>" class="card-img-top" alt="">
                                 <div class="card-body">
                                     <h5 class="card-title">Titlu: <%= topic.title %></h5>
                                     <p class="card-text description">Descriere: <%= truncateText(topic.description, 40) %></p>

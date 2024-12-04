@@ -31,19 +31,12 @@ const getStudentTopics = async (req, res) => {
   const education_level = req.session.loggedInUser.education_level;
 
   try {
+
     const specialization = await Specialization.findByPk(specialization_id);
     if (!specialization) {
         return res.status(404).status('Specialization not found');
       }
       
-    const faculty_photo = await specialization.getFaculty({
-      attributes: ['img_url']
-    });
-    
-    if(!faculty_photo){
-      return res.status(404).status('Faculty photo not found');
-    }
-
     const topics = await specialization.getTopics({
       where: {
         education_level: education_level,
@@ -61,7 +54,7 @@ const getStudentTopics = async (req, res) => {
       return res.status(404).json({ message: 'Topics not found' });
     };
 
-   return res.render('pages/student/topics', { topics: topics, logo: faculty_photo, truncateText: truncateText });
+   return res.render('pages/student/topics', { topics: topics, truncateText: truncateText });
 
   }
   catch (error) {
@@ -115,14 +108,6 @@ const getRequestTopics = async (req, res) => {
     if (!specialization) {
       return res.status(404).json({ message: 'Specialization not found' });
     }
-
-    const faculty_photo = await specialization.getFaculty({
-      attributes: ['img_url']
-    });
-
-    if(!faculty_photo){
-      return res.status(404).status('Faculty photo not found');
-    }
     
     const requests = await topicRequest.findAll({
       where: {
@@ -145,7 +130,7 @@ const getRequestTopics = async (req, res) => {
       delete req.session.loggedInUser;
       res.redirect('/');
     };
-    return res.render('pages/student/requests', { requests: requests, logo: faculty_photo, truncateText: truncateText });
+    return res.render('pages/student/requests', { requests: requests, truncateText: truncateText });
   }
   catch (error) {
     console.error('Error getting requests:', error);

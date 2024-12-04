@@ -5,47 +5,7 @@
 </head>
 <body class="container">
     <header>
-        <nav class="navbar navbar-expand-lg bg-body-tertiary">
-            <div class="container-fluid">
-              <a class="navbar-brand" href="#">Navbar</a>
-              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-              </button>
-              <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                  <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/student">Acasa</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="/student/about">Despre</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="/student/topics">Teme de licență</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="/student/request-topics">Aplicările mele</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="/student/logout">Deconectare</a>
-                  </li>
-                  <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                      Cont
-                    </a>
-                    <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="#">Action</a></li>
-                      <li><a class="dropdown-item" href="#">Another action</a></li>
-                      <li><hr class="dropdown-divider"></li>
-                      <li><a class="dropdown-item" href="#">Something else here</a></li>
-                    </ul>
-                  </li>
-                  <li class="nav-item">
-                    <input class="form-control me-2" type="search" placeholder="Cauta" aria-label="Search" id="search">
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </nav>          
+        <%- include('../../partials/studentHeader') %>
     </header>
     <main class="flex-grow-1">
         <div class="container topicsContainer">
@@ -54,7 +14,6 @@
                         <div class="col" data-keywords="<%= topic.keywords %>" data-teacher="<%= topic.user.name %>">
                             <a href="/student/topic/<%= topic.id %>" class="text-decoration-none text-dark">
                             <div class="card">
-                                <img src="<%= logo.img_url %>" class="card-img-top" alt="">
                                 <div class="card-body">
                                     <h5 class="card-title">Titlu: <%= topic.title %></h5>
                                     <p>Descriere: <%= truncateText(topic.description, 40) %></p>

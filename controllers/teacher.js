@@ -31,9 +31,9 @@ const teacherTopics = async (req, res) => {
   const teacherId = req.session.loggedInUser.id;
 
   try{
-    const faculties = await Faculty.findAll({});
+    const faculties = await Faculty.findAll();
 
-    if(!faculties){
+    if(faculties.length === 0){
       return res.status(404).send('Faculties not found');
     }
 
@@ -41,16 +41,7 @@ const teacherTopics = async (req, res) => {
       include: [
         {
           model: Topic,
-          as: 'topics',
-          include: [{
-            model: Specialization,
-            as: 'specializations',
-            include: {
-              model: Faculty,
-              as: 'faculty',
-              attributes: ['img_url']
-            }
-          }]
+          as: 'topics'
         }
       ]
     });
@@ -249,12 +240,7 @@ const studentRequests = async (req, res) => {
       },
       include: [{
           model: User,
-          as: 'student',
-          include: {
-            model: Faculty,
-            as: 'faculty',
-            attributes: ['img_url']
-          }
+          as: 'student'
         },
         {
           model: Topic,
