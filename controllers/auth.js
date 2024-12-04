@@ -245,7 +245,7 @@ const googleCallback = async (req, res) => {
 
       const token = await generateTokenAndScheduleDeletion(id);
       
-      return res.redirect(`http://www.licentatest.com/choose-profile/${token}`);
+      return res.redirect(`http://localhost:8080/choose-profile/${token}`);
     }
 
   } catch (error) {
