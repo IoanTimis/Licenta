@@ -60,9 +60,6 @@ This application facilitates the online management and selection of BSc/MSc thes
 - **Backend:**  
   Node.js with Express.js  
 
-- **Templating Engine:**  
-  EJS for rendering views  
-
 - **Database:**  
   MySQL with Sequelize ORM for relational data handling  
 
@@ -71,13 +68,13 @@ This application facilitates the online management and selection of BSc/MSc thes
 
 - **Frontend:**  
   HTML, CSS, JavaScript  
-  React.js (in progress)  
+  Next.js (in progress)  
 
 ---
 
 ## Working On
 
-1. **Adding React as Front-End Framework**  
+1. **Adding Next.js as Front-End Framework**  
    - Transitioning the frontend to React for enhanced interactivity and state management.  
    - Modularizing components for scalability and maintainability.  
 
